@@ -1,0 +1,46 @@
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+
+:not(:defined) {
+  visibility: hidden;
+}
+
+img[lazy=loading] {
+  opacity: 0;
+}
+
+/* @media  (max-width: 768px) {
+  h1 {
+    font-size: 1.75em!important;
+    line-height: 1.1111;
+  } 
+
+  h2 {
+    font-size: 1.5em!important;
+    margin-top: 1em!important;
+    margin-bottom: 0.625em!important;
+    line-height: 1.3333!important;
+    font-weight: 500!important;
+  }
+
+  h3 {
+    font-size: 1.3em!important;
+    margin-top: 1em;
+    margin-bottom: 0.625em!important;
+    line-height: 1.3333!important;
+    font-weight: 500!important;
+  }
+
+  h4 {
+    font-size: 1.2em!important;
+    margin-top: 1em!important;
+    margin-bottom: 0.625em!important;
+    line-height: 1.3333!important;
+    font-weight: 500!important;
+  }
+  
+} */
