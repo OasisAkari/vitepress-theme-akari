@@ -72,7 +72,9 @@ When set to true, the cc license component will be displayed at the bottom of th
 
 Run: `npm run docs:dev`
 
-Build: `npm run docs:dev`
+Build: `npm run docs:build`
+
+Preview dist: `npm run docs:preview`
 
 Note that content-fixer.mjs will be run when executing the build to fix missing parameter fields in the article, so there is no need to add `color`, `color_dark`, `date` manually.
 
