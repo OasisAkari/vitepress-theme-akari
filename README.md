@@ -70,7 +70,7 @@ When set to true, the cc license component will be displayed at the bottom of th
 
 ## Run & Build
 
-Run: `npm run docs:dev`
+Dev: `npm run docs:dev`
 
 Build: `npm run docs:build`
 
