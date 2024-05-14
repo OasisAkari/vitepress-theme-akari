@@ -15,7 +15,7 @@ const themeInfoRef = ref<HTMLElement | null>()
 
 onMounted(() => {
     const themeInfo = document.createElement('a')
-    themeInfo.href = "https://github.com/OasisAkari"
+    themeInfo.href = "https://github.com/OasisAkari/vitepress-theme-akari"
     themeInfo.innerText = 'Theme: Akari by OasisAkari'
     let c = document.querySelector('meta[name="complied-time"]')
     if (c) {
