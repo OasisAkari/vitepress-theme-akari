@@ -1,6 +1,11 @@
 A Material You stylized theme for vitepress, built with Vue3 + MDUI + GSAP and etc.
 
 
+## Showcase
+
+![](/assets/20240514185649.jpg)
+
+
 ## Demos
 
 [vitepress-theme-akari.vercel.app](https://vitepress-theme-akari.vercel.app)
