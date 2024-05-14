@@ -1,5 +1,11 @@
-A Material You stylized theme for vitepress.
+A Material You stylized theme for vitepress, built with Vue3 + MDUI + GSAP.
 
+
+## Demos
+
+[vitepress-theme-akari.vercel.app](https://vitepress-theme-akari.vercel.app)
+
+[stray-soul.com](https://stray-soul.com) (I made some customs for my self, but however you can make your own too!)
 
 ## Usage
 
@@ -65,7 +71,7 @@ cc_license: true
 ---
 ```
 
-When set to true, the cc license component will be displayed at the bottom of the page. You can configure text in `translation.ts`
+When set to true, the cc license component will be displayed at the bottom of the page. The display text can be configured in `translation.ts`
 
 
 ## Run & Build
@@ -79,6 +85,12 @@ Preview dist: `npm run docs:preview`
 Note that content-fixer.mjs will be run when executing the build to fix missing parameter fields in the article, so there is no need to add `color`, `color_dark`, `date` manually.
 
 
+## Translations
+
+Currently, the theme supports `en-US` and `zh-CN` language, it can be configured in `config.ts`.
+
+If you want to support another language, the PR is welcome.
+
 
 ## Q&A
 
@@ -88,7 +100,7 @@ I added my flavor to it, so it may not designed in MD3 style precisely. Also I h
 
 ### Your code smells so terrible...
 
-This is my first project built with Vue, GSAP, and etc. so... you probably know. But however PR is welcome.
+This is my first project built with Vue and etc. so... you probably know. But however PR is welcome.
 
 ### Animations are so buggy...
 
@@ -99,6 +111,10 @@ I tried my best... sorry.
 I dunno at this point, so that's all.
 
 ## References
+
+[MDUI](https://mdui.org/)
+
+[GSAP](https://gsap.com/)
 
 [vitepress-blog-pure](https://github.com/airene/vitepress-blog-pure)
 
