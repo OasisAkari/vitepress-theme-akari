@@ -5,7 +5,7 @@ const themeConfig: AkariThemeConfig = {
   debugInfo: true,
   nav: [
     { text: 'Home', link: '/index.html' },
-    { text: 'Hello World!', link: '/hello-world.html' },
+    { text: 'Hello World!', link: '/hello-world1.html' },
   ],
   hideFromHomeLayouts: ['home'],
   defaultColorsSet: ['#ac2b21', '#8e2fa8', '#285f9f', '#2e6c29', '#675f1a', '#2b6672'],

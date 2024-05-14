@@ -1,43 +1,7 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
-import { useRouter, withBase } from 'vitepress';
-import { data } from '../posts.data';
 import { translations } from '../translations';
 
-
-const router = useRouter();
-
 const faces = ["\\(^\u0414^)/", "(\u0387.\u0387)", "(\u02da\u0394\u02da)b", "(\u0387_\u0387)", "(^_^)b", "(>_<)", "(o^^)o", "(;-;)", "(\u2265o\u2264)", "\\(o_o)/", "(^-^*)", "(='X'=)"]
-
-
-onMounted(() => {
-    let url = router.route.path
-    if (url.endsWith('.html')) {
-        url = url.replace('.html', '')
-    }
-    if (url.startsWith('/index.php')) {
-        url = url.replace('/index.php', '')
-    }
-    console.log(url)
-    if ((url === '/' || url === '') && localStorage.getItem('lastRedirect') !== url) {
-        localStorage.setItem('lastRedirect', url)
-        location.href = withBase(url)
-        return
-    }
-    for (let post in data) {
-        if (data[post].url.startsWith(url) && data[post].url !== url) {
-            let a_url = data[post].url
-            if (!a_url.endsWith('.html')) {
-                a_url = a_url + '.html'
-            }
-            if (a_url !== url && localStorage.getItem('lastRedirect') !== url) {
-                localStorage.setItem('lastRedirect', url)
-                location.href = withBase(a_url)
-            }
-            break
-        }
-    }
-});
 
 
 
