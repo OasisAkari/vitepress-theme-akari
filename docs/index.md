@@ -1,5 +1,5 @@
 ---
-title: 首页
+title: Home
 layout: home
 description: ''
 cover_image: /pap.png
