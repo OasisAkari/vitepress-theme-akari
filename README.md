@@ -14,7 +14,7 @@ A Material You stylized theme for vitepress, built with Vue3 + MDUI + GSAP and e
 
 ## Usage
 
-Just clone this repo, then configure some things:
+Just clone this repo, install dependencies (`npm install`), then configure some things:
 
 ### config.ts
 
