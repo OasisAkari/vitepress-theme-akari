@@ -84,13 +84,15 @@ function toggleTheme(themeMode: any) {
         }
     }
 
-    if (!noColor.value || !fromRouter.value) {
-        if (themeMode === 'light') {
-            themeColor.value = color.value
-        }
-        else {
-            themeColor.value = color_dark.value
-        }
+    if (fromRouter.value && noColor.value){
+        return
+    }
+
+    if (themeMode === 'light') {
+        themeColor.value = color.value
+    }
+    else {
+        themeColor.value = color_dark.value
     }
 }
 

@@ -27,7 +27,11 @@ async function fixContent(filePath) {
   if (file.data.cover_image) {
     if (!file.data.color){
       console.log(`Fixing color for ${filePath}...`);
-      file.data.color = await sourceColorFromImage(publicPath + file.data.cover_image);
+      let p = file.data.cover_image
+      if (!isURL.test(p)) {
+        p = publicPath + p;
+      }
+      file.data.color = await sourceColorFromImage(p);
       console.log(file.data.color);
       
     }
@@ -36,7 +40,11 @@ async function fixContent(filePath) {
   if (file.data.cover_image_dark) {
     if (!file.data.color_dark){
       console.log(`Fixing color_dark for ${filePath}...`);
-      file.data.color_dark = await sourceColorFromImage(publicPath + file.data.cover_image_dark);
+      let p = file.data.cover_image_dark
+      if (!isURL.test(p)) {
+        p = publicPath + p;
+      }
+      file.data.color_dark = await sourceColorFromImage(p);
     }
   }
 

@@ -75,6 +75,11 @@ function selectItem(item: any) {
     if (container_list[item].clickable && containerRef) {
         let rect = containerRef[item].getBoundingClientRect();
         selectedItem.value = item;
+        let card_ = containerRef[item].querySelector('.post-card-layout-container')
+        let color = themeMode.value === 'light' ? card_?.getAttribute('card-color') : card_?.getAttribute('card-color-dark')
+        if (!color) {
+            color = '#FFFFFF'
+        }
         store.$patch({
             'boxData': {
                 'x': rect.x,
@@ -84,7 +89,8 @@ function selectItem(item: any) {
                 'url': withBase(container_list[item].data.url),
                 'active': true
             },
-            'fromRouter': true
+            'fromRouter': true,
+            'themeColor': color,
         })
         // delay for wait click animation finish
         setTimeout(() => {
