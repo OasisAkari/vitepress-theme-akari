@@ -32,12 +32,11 @@ const faces = ["\\(^\u0414^)/", "(\u0387.\u0387)", "(\u02da\u0394\u02da)b", "(\u
 
 .page-not-found {
     background-color: rgb(var(--mdui-color-surface-container));
-    width: 100%;
+    width: 85%;
     margin-bottom: 100px;
     border-radius: var(--mdui-shape-corner-extra-large);
     box-shadow: var(--mdui-elevation-level4);
     display: flex;
-    flex-grow: 1;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
