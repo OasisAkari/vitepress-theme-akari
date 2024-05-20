@@ -15,12 +15,12 @@ import ClickToTop from './components/ClickToTop.vue';
 import SiteNotice from './components/SiteNotice.vue';
 import { setTheme } from 'mdui/functions/setTheme.js';
 import { setColorScheme } from 'mdui/functions/setColorScheme.js'
+import { observeResize } from 'mdui/functions/observeResize.js';
 import { translations } from './translations'
 import { useThemeGlobalStore } from './global'
 import { storeToRefs } from 'pinia';
 import '@docsearch/css';
 import './search.css'
-import { ResizeObserver } from '@juggle/resize-observer';
 import { changeFontSize } from './utils';
 import defineConfig from '../config';
 
@@ -286,31 +286,26 @@ function onScroll(e: any) {
     }
 }
 
-
-let layoutObserver = new ResizeObserver(entries => {
-    for (let entry of entries) {
-        let width = entry.contentRect.width - 1;
-        let windowWidth = window.innerWidth
-        let calcMultiply = 0.95
-        let calcWidth = width
-        if (containerRef.value) {
-            if (width > 1000) {
-                width = 1000
-            }
-            calcMultiply -= Math.max(0.05 * (windowWidth - 840) / 840, 0)
-            calcWidth = width * calcMultiply
-            containerRef.value.style.width = calcWidth + 'px'
-        }
-        changeFontSize(calcWidth)
-    }
-});
-
 onMounted(() => {
     if (layoutRef.value) {
         if (!fromRouter.value) {
             changeFontSize(window.innerWidth, undefined, undefined, true)
         }
-        layoutObserver.observe(layoutRef.value)
+        observeResize(layoutRef.value, function (entry, observer) {
+            let width = entry.contentRect.width - 1;
+            let windowWidth = window.innerWidth
+            let calcMultiply = 0.95
+            let calcWidth = width
+            if (containerRef.value) {
+                if (width > 1000) {
+                    width = 1000
+                }
+                calcMultiply -= Math.max(0.05 * (windowWidth - 840) / 840, 0)
+                calcWidth = width * calcMultiply
+                containerRef.value.style.width = calcWidth + 'px'
+            }
+            changeFontSize(calcWidth)
+        })
     }
     globalStore.flushThemeMode()
     setTheme((themeMode.value as any))

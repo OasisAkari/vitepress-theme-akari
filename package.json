@@ -2,7 +2,6 @@
   "type": "module",
   "devDependencies": {
     "@floating-ui/vue": "^1.0.6",
-    "@juggle/resize-observer": "^3.4.0",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@types/node": "^20.11.5",
     "@types/ua-parser-js": "^0.7.39",
