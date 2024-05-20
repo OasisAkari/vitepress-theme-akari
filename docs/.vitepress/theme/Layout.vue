@@ -118,32 +118,28 @@ router.onBeforeRouteChange = async () => {
 
 router.onAfterRouteChanged = async () => {
     pageViews.value = 0
-    let listenFlagState = new Promise((resolved, rejected) => {
-        function listen() {
-            if (contentLoaded.value) {
-                return resolved(contentLoaded.value)
-            }
-            if (containerRef.value) {
-                if (!location.hash) {
-                    layoutRef.value?.scrollTo(0, 0)
-                }
-                containerRef.value.style.transform = `translateY(${boxData.value.y - 96}px)`
-                containerRef.value.style.height = boxData.value.height + 'px'
-                containerRef.value.style.borderRadius = '1rem'
-
-            }
-
-            setTimeout(() => requestAnimationFrame(listen), 100)
-        }
-        listen()
-    })
     if (transition) {
         await transition.ready
         if (containerRef.value && boxData.value.active) {
             if (!location.hash) {
                 layoutRef.value?.scrollTo(0, 0)
             }
+            let listenFlagState = new Promise((resolved, rejected) => {
+                function listen() {
+                    if (contentLoaded.value) {
+                        return resolved(contentLoaded.value)
+                    }
+                    if (containerRef.value) {
+                        containerRef.value.style.transform = `translateY(${boxData.value.y - 96}px)`
+                        containerRef.value.style.height = boxData.value.height + 'px'
+                        containerRef.value.style.borderRadius = '1rem'
 
+                    }
+
+                    setTimeout(() => requestAnimationFrame(listen), 100)
+                }
+                listen()
+            })
             await listenFlagState.then((loaded) => {
                 console.log(loaded, 'then?')
                 console.log(boxData.value)
@@ -209,28 +205,26 @@ router.onAfterRouteChanged = async () => {
     } else {
         if (boxData.value.active) {
             console.log('Animation fallback...')
-            await listenFlagState.then((loaded) => {
-                if (containerRef.value) {
-                    gsap.fromTo(containerRef.value, {
-                        opacity: 0, y: boxData.value.y - 96,
-                        height: boxData.value.height,
-                    }, {
-                        onStart: () => {
-                            if (!location.hash) {
-                                layoutRef.value?.scrollTo(0, 0)
-                            }
-                        },
-                        y: 0, opacity: 1, duration: 0.7, height: 'initial', ease: "expo.out",
-                        onComplete: () => {
-                            boxData.value.active = false
-                            fromRouter.value = false
-                            if (containerRef.value) {
-                                containerRef.value.style.transform = 'unset' // patch for mdui: https://github.com/zdhxiong/mdui/issues/296
-                            }
+            if (containerRef.value) {
+                gsap.fromTo(containerRef.value, {
+                    opacity: 0, y: boxData.value.y - 96,
+                    height: boxData.value.height,
+                }, {
+                    onStart: () => {
+                        if (!location.hash) {
+                            layoutRef.value?.scrollTo(0, 0)
                         }
-                    })
-                }
-            })
+                    },
+                    y: 0, opacity: 1, duration: 0.7, height: 'initial', ease: "expo.out",
+                    onComplete: () => {
+                        boxData.value.active = false
+                        fromRouter.value = false
+                        if (containerRef.value) {
+                            containerRef.value.style.transform = 'unset' // patch for mdui: https://github.com/zdhxiong/mdui/issues/296
+                        }
+                    }
+                })
+            }
         } else {
             if (!location.hash) {
                 layoutRef.value?.scrollTo(0, 0)
@@ -316,7 +310,7 @@ onMounted(() => {
     }
     let docSearchConfig = defineConfig.themeConfig.docSearch
     if (docSearchConfig && docSearchConfig.apiKey && docSearchConfig.appId && docSearchConfig.indexName) {
-
+        
         import('@docsearch/js').then((docsearch) => {
             let t = translations.docSearch
             docsearch.default({
