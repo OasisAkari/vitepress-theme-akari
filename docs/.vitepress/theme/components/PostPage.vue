@@ -172,6 +172,12 @@ onMounted(() => {
                     postPageBackgroundRef.value.style.transform = 'unset' // patch for mdui: https://github.com/zdhxiong/mdui/issues/296
                 }
             })
+            timeline.fromTo('.cc-license', { y: 32, opacity: 0 }, {
+                y: 0,
+                opacity: 1,
+                duration: 0.4,
+                ease: 'power2.out',
+            }, '-=0.4')
         }
 
         if (location.hash) {
