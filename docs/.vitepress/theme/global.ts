@@ -13,7 +13,6 @@ export const useThemeGlobalStore = defineStore('theme', {
             boxData: { x: 0, y: 0, width: 0, height: 0, url: '', active: false },
             currentRoute: '',
             showScrollTopButton: false,
-            reachedBottom: false,
             colorsSet: defineConfig.themeConfig.defaultColorsSet,
             hideLayouts: defineConfig.themeConfig.hideFromHomeLayouts,
             homeCurrentScrollTop: 0,

@@ -35,7 +35,7 @@ const smoothScroll = ref(false)
 
 const globalStore = useThemeGlobalStore()
 
-const { themeMode, themeColor, boxData, fromRouter, pageViews, showScrollTopButton, reachedBottom, startTransition } = storeToRefs(globalStore)
+const { themeMode, themeColor, boxData, fromRouter, pageViews, showScrollTopButton, startTransition } = storeToRefs(globalStore)
 
 const modeButtonRef = ref()
 
@@ -119,21 +119,55 @@ router.onBeforeRouteChange = async () => {
 router.onAfterRouteChanged = async () => {
     pageViews.value = 0
     if (transition) {
-        await transition.ready
+        if (containerRef.value) {
+            containerRef.value.style.transform = `translateY(${boxData.value.y - 96}px)`
+            containerRef.value.style.height = boxData.value.height + 'px'
+            containerRef.value.style.borderRadius = '1rem'
+
+        }
+        transition.ready.then(() => {
+            if (containerRef.value && boxData.value.active) {
+                if (!location.hash) {
+                    layoutRef.value?.scrollTo(0, 0)
+                }
+                let dropHeight = boxData.value.y - 96
+                if (dropHeight < 300) {
+                    dropHeight = 300
+                }
+                document.documentElement.animate(
+                    {
+                        transform: `translateY(${dropHeight}px)`,
+                        opacity: 0,
+                        mixBlendMode: 'plus-lighter',
+                    },
+                    {
+                        duration: 500,
+                        easing: 'ease-out',
+                        pseudoElement: '::view-transition-old(layout-main)',
+                    }
+                );
+                document.documentElement.animate(
+                    {
+                        transform: 'none',
+                        mixBlendMode: 'normal',
+                    },
+                    {
+                        duration: 500,
+                        easing: 'ease-out',
+                        pseudoElement: '::view-transition-new(layout-main)',
+                    }
+                );
+            }
+        })
         if (containerRef.value && boxData.value.active) {
             if (!location.hash) {
                 layoutRef.value?.scrollTo(0, 0)
             }
+
             let listenFlagState = new Promise((resolved, rejected) => {
                 function listen() {
                     if (contentLoaded.value) {
                         return resolved(contentLoaded.value)
-                    }
-                    if (containerRef.value) {
-                        containerRef.value.style.transform = `translateY(${boxData.value.y - 96}px)`
-                        containerRef.value.style.height = boxData.value.height + 'px'
-                        containerRef.value.style.borderRadius = '1rem'
-
                     }
 
                     setTimeout(() => requestAnimationFrame(listen), 100)
@@ -151,41 +185,13 @@ router.onAfterRouteChanged = async () => {
                     }, {
                         y: 0, duration: 0.7, height: 'initial', ease: "expo.out", borderRadius: '1.75rem',
                         onStart: () => {
-                            let dropHeight = boxData.value.y - 96
-                            if (dropHeight < 300) {
-                                dropHeight = 300
-                            }
-                            document.documentElement.animate(
-                                {
-                                    transform: `translateY(${dropHeight}px)`,
-                                    opacity: 0,
-                                    mixBlendMode: 'plus-lighter',
-                                },
-                                {
-                                    duration: 500,
-                                    easing: 'ease-out',
-                                    pseudoElement: '::view-transition-old(layout-main)',
-                                }
-                            );
 
-                            document.documentElement.animate(
-                                {
-                                    transform: 'none',
-                                    mixBlendMode: 'normal',
-                                },
-                                {
-                                    duration: 500,
-                                    easing: 'ease-out',
-                                    pseudoElement: '::view-transition-new(layout-main)',
-                                }
-                            );
                         },
                         onComplete: () => {
                             boxData.value.active = false
                             fromRouter.value = false
                             if (containerRef.value) {
                                 containerRef.value.style.transform = 'unset' // patch for mdui: https://github.com/zdhxiong/mdui/issues/296
-                                containerRef.value.style.borderRadius = '0.75rem'
                             }
                         }
                     })
@@ -193,7 +199,6 @@ router.onAfterRouteChanged = async () => {
             }).then(() =>
                 startTransition.value = false
             )
-
 
         } else {
             if (!location.hash) {
@@ -268,22 +273,7 @@ const title = ref(themeConfig.title)
 
 
 function onScroll(e: any) {
-    let scrollTop = e.target.scrollTop
-    let max = e.target.scrollHeight
-    let offset = Math.ceil(e.target.getBoundingClientRect().height)
-    let currentHeight = scrollTop + offset
-    if (scrollTop > 100) {
-        showScrollTopButton.value = true
-
-    } else {
-        showScrollTopButton.value = false
-    }
-
-    if (currentHeight + 10 >= max) {
-        reachedBottom.value = true
-    } else if (currentHeight + 650 <= max) {
-        reachedBottom.value = false
-    }
+    showScrollTopButton.value = e.target.scrollTop > 100
 }
 
 onMounted(() => {
@@ -292,16 +282,8 @@ onMounted(() => {
             changeFontSize(window.innerWidth, undefined, undefined, true)
         }
         observeResize(layoutRef.value, function (entry, observer) {
-            let width = entry.contentRect.width - 1;
-            let windowWidth = window.innerWidth
-            let calcMultiply = 0.95
-            let calcWidth = width
+            let calcWidth = (Math.min(1000, entry.contentRect.width)) * (0.95 - Math.max(0.05 * (window.innerWidth - 840) / 840, 0))
             if (containerRef.value) {
-                if (width > 1000) {
-                    width = 1000
-                }
-                calcMultiply -= Math.max(0.05 * (windowWidth - 840) / 840, 0)
-                calcWidth = width * calcMultiply
                 containerRef.value.style.width = calcWidth + 'px'
             }
             changeFontSize(calcWidth)
