@@ -249,7 +249,7 @@ watch(contentLoaded, (loaded: any) => {
         }
 
         if (postPageBackgroundRef.value) {
-            changeFontSize(postPageBackgroundRef.value.clientWidth, AnimateTimeline, 0.2, !fromRouter.value)
+            changeFontSize({width: postPageBackgroundRef.value.clientWidth, timeline: AnimateTimeline, position: 0.2, force: true})
         }
 
         if (titleRef.value instanceof HTMLElement && fromRouter.value) {

@@ -62,19 +62,18 @@ const fontSizeData: { [key: string]: any } = {
     }
 }
 
-function changeFontSize(width: number, timeline: gsap.core.Timeline=gsap.timeline(), position: number=0, noRouter=false) {
-    let fontSize = 'default'
-    if (width < 768) {
-        fontSize = 'small'
-    }
+let fontSize = 'default'
+
+function changeFontSize({width=window.innerWidth, timeline=gsap.timeline(), position=0, force=false}) {
+    let fontSize_ = width < 768 ? 'small' : 'default'
+    if (!force && fontSize_ === fontSize) return
+    fontSize = fontSize_
     for (let k in fontSizeData[fontSize]) {
         let qk = document.querySelectorAll(k)
         if (qk.length) {
-            if (!noRouter) {
-                timeline.to(qk, { ...fontSizeData[fontSize][k], duration: 0.3 }, position)
-            } else {
-                gsap.fromTo(qk, { ...fontSizeData[fontSize][k]}, { ...fontSizeData[fontSize][k]})
-            }
+            timeline.to(k, { ...fontSizeData[fontSize][k], duration: 0.3, onComplete: () => {
+                console.log(1)
+            } }, position)
         }
     }
 }

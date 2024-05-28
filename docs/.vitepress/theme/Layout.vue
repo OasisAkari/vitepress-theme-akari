@@ -279,14 +279,14 @@ function onScroll(e: any) {
 onMounted(() => {
     if (layoutRef.value) {
         if (!fromRouter.value) {
-            changeFontSize(window.innerWidth, undefined, undefined, true)
+            changeFontSize({width: window.innerWidth})
         }
         observeResize(layoutRef.value, function (entry, observer) {
             let calcWidth = (Math.min(1000, entry.contentRect.width)) * (0.95 - Math.max(0.05 * (window.innerWidth - 840) / 840, 0))
             if (containerRef.value) {
                 containerRef.value.style.width = calcWidth + 'px'
             }
-            changeFontSize(calcWidth)
+            changeFontSize({width: calcWidth})
         })
     }
     globalStore.flushThemeMode()
