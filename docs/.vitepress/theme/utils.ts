@@ -71,9 +71,7 @@ function changeFontSize({width=window.innerWidth, timeline=gsap.timeline(), posi
     for (let k in fontSizeData[fontSize]) {
         let qk = document.querySelectorAll(k)
         if (qk.length) {
-            timeline.to(k, { ...fontSizeData[fontSize][k], duration: 0.3, onComplete: () => {
-                console.log(1)
-            } }, position)
+            timeline.to(k, { ...fontSizeData[fontSize][k], duration: 0.3 }, position)
         }
     }
 }
