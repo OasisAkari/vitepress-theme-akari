@@ -277,6 +277,7 @@ function onScroll(e: any) {
 }
 
 onMounted(() => {
+    console.log(page.value)
     if (layoutRef.value) {
         if (!fromRouter.value) {
             changeFontSize({width: window.innerWidth})

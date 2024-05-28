@@ -87,7 +87,7 @@ const defineConfig = { // Docs: https://vitepress.dev/reference/site-config
     ],
     [
       'link',
-      { 'rel': 'preconnect', 'href': 'https://fonts.gstatic.com', 'crossorigin': true }
+      { 'rel': 'preconnect', 'href': 'https://fonts.gstatic.com', 'crossorigin': '' }
     ],
     [
       'link',

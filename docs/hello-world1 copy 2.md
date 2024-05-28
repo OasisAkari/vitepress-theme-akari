@@ -2,7 +2,8 @@
 title: Hello world!
 description: Hello world!
 date: '2024-05-13T16:27:22.393Z'
-categorys: ['test']
+categorys:
+  - test
 ---
 
 Hello world!

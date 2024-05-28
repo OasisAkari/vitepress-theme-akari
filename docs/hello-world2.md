@@ -6,7 +6,8 @@ cover_image: /pap.png
 cover_image_dark: /pap-dark.png
 color: '#b6b6ea'
 color_dark: '#6c72b4'
-categorys: ['test']
+categorys:
+  - test
 ---
 
 Hello world!
