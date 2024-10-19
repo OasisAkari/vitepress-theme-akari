@@ -2,7 +2,7 @@
   "type": "module",
   "devDependencies": {
     "@floating-ui/vue": "^1.1.2",
-    "@rollup/plugin-commonjs": "^25.0.8",
+    "@rollup/plugin-commonjs": "^28.0.0",
     "@types/node": "^20.14.13",
     "@types/ua-parser-js": "^0.7.39",
     "clipboard": "^2.0.11",
