@@ -17,7 +17,7 @@
   "dependencies": {
     "@datagouv/vitepress-plugin-matomo": "^1.0.5",
     "@docsearch/js": "^3.6.1",
-    "@material/material-color-utilities": "^0.2.7",
+    "@material/material-color-utilities": "^0.3.0",
     "@mdui/icons": "^1.0.2",
     "@napi-rs/canvas": "^0.1.53",
     "gray-matter": "^4.0.3",
