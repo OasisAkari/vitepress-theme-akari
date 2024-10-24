@@ -246,6 +246,11 @@ watch(contentLoaded, (loaded: any) => {
                 marginTop: 32,
                 ease: 'expo.out',
             }, 0.2)
+            AnimateTimeline.fromTo(postContentRef.value, { opacity: 0, }, {
+                duration: 1,
+                opacity: 1,
+                ease: 'expo.out',
+            }, 0.2)
         }
 
         if (postPageBackgroundRef.value) {
