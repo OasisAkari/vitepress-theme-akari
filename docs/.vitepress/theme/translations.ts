@@ -1,4 +1,4 @@
-import defineConfig from "../config"
+import defineConfig from "../config.js"
 
 const translations_values = {
     'en-US': {

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-import defineConfig from '../config'
+import defineConfig from '../config.js'
 
 
 export const useThemeGlobalStore = defineStore('theme', {

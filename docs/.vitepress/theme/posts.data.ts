@@ -1,5 +1,5 @@
 import { createContentLoader } from 'vitepress'
-import { Post } from './types'
+import { Post } from './types.js'
 
 
 declare const data: Post[]

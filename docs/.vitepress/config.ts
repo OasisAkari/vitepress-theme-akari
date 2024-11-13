@@ -1,5 +1,5 @@
 import { TransformContext } from "vitepress"
-import type { AkariThemeConfig } from "theme/types"
+import type { AkariThemeConfig } from "./theme/types.js"
 
 const themeConfig: AkariThemeConfig = {
   debugInfo: true,
