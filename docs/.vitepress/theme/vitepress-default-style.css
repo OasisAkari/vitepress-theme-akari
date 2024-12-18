@@ -1,0 +1,103 @@
+/* some changes basiced on vitepress default theme were made to fit Akari theme and mdui*/
+.mdui-prose div[class*=language-] {
+     position: relative;
+     overflow-x: auto;
+     transition: background-color .5s;
+     background-color: rgb(var(--mdui-color-surface-container));
+     border-radius: var(--mdui-shape-corner-extra-small);
+ }
+
+.mdui-prose [class*=language-]>button.copy {
+     direction: ltr;
+     position: absolute;
+     top: 12px;
+     right: 12px;
+     z-index: 3;
+     border: 1px solid var(--vp-code-copy-code-border-color);
+     border-radius: 4px;
+     width: 40px;
+     height: 40px;
+     background-color: var(--vp-code-copy-code-bg);
+     opacity: 0;
+     cursor: pointer;
+     background-image: var(--vp-icon-copy);
+     background-position: 50%;
+     background-size: 20px;
+     background-repeat: no-repeat;
+     transition: border-color .25s, background-color .25s, opacity .25s;
+ }
+
+.mdui-prose [class*=language-]:hover>button.copy,
+.mdui-prose [class*=language-]>button.copy:focus {
+     opacity: 1;
+ }
+
+.mdui-prose [class*=language-]>span.lang {
+     position: absolute;
+     top: 2px;
+     right: 8px;
+     z-index: 2;
+     font-size: 12px;
+     font-weight: 500;
+     color: var(--vp-code-lang-color);
+     transition: color .4s, opacity .4s;
+ }
+
+.mdui-prose [class*=language-]:hover>button.copy+span.lang,
+.mdui-prose [class*=language-]>button.copy:focus+span.lang {
+     opacity: 0;
+ }
+
+.mdui-prose [class*=language-] pre {
+     position: relative;
+     z-index: 1;
+     margin: 0;
+     padding: 20px 0;
+     background: transparent;
+     overflow-x: auto;
+ }
+
+.mdui-prose [class*=language-] code {
+     display: block;
+     padding: 0 24px;
+     width: fit-content;
+     min-width: calc(100% - 48px);
+     line-height: var(--vp-code-line-height);
+     font-size: var(--vp-code-font-size);
+     color: var(--vp-code-block-color);
+     transition: color .5s;
+ }
+
+.mdui-prose [class*=language-] pre,
+.mdui-prose [class*=language-] code {
+     background-color: rgb(var(--mdui-color-surface-container));
+     /* color: rgb(var(--mdui-color-on-surface-container)); */
+     color: rgb(var(--mdui-color-on-surface));
+     border-radius: var(--mdui-shape-corner-extra-small);
+     direction: ltr;
+     text-align: left;
+     white-space: pre;
+     word-spacing: normal;
+     word-break: normal;
+     word-wrap: normal;
+     -moz-tab-size: 4;
+     -o-tab-size: 4;
+     tab-size: 4;
+     -webkit-hyphens: none;
+     -moz-hyphens: none;
+     -ms-hyphens: none;
+     hyphens: none;
+ }
+
+.mdui-prose [class*=language-]>button.copy.copied,
+.mdui-prose [class*=language-]>button.copy:hover.copied {
+     border-radius: 0 4px 4px 0;
+     background-color: var(--vp-code-copy-code-hover-bg);
+     background-image: var(--vp-icon-copied);
+ }
+
+.mdui-prose [class*=language-]>button.copy:hover,
+.mdui-prose[class*=language-]>button.copy.copied {
+     border-color: var(--vp-code-copy-code-hover-border-color);
+     background-color: var(--vp-code-copy-code-hover-bg);
+ }
