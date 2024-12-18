@@ -83,14 +83,20 @@ function toggleTheme() {
 
 const darkmodeSelected = ref(false)
 
-watch(themeMode, (mode: string) => {
-    darkmodeSelected.value = mode === 'dark'
+
+function watchThemeMode() {
+    darkmodeSelected.value = themeMode.value === 'dark'
     // add vitepress defult theme flag, this works for code block theme
-    if(mode === 'dark'){
+    if (darkmodeSelected.value) {
         document.getElementsByTagName('html')[0].classList.add('dark')
-    }else{
+    } else {
         document.getElementsByTagName('html')[0].classList.remove('dark')
     }
+}
+
+
+watch(themeMode, () => {
+    watchThemeMode()
 })
 
 watch(themeColor, (color: string) => {
@@ -298,10 +304,11 @@ onMounted(() => {
     }
     globalStore.flushThemeMode()
     setTheme((themeMode.value as any))
+
     if (frontmatter.value.layout === 'redirect') {
         location.href = withBase(frontmatter.value.url)
     }
-    darkmodeSelected.value = themeMode.value === 'dark'
+    watchThemeMode()
     if (layoutRef.value) {
         layoutRef.value.addEventListener('scroll', onScroll)
 

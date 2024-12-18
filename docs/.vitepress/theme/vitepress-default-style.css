@@ -4,7 +4,7 @@
      overflow-x: auto;
      transition: background-color .5s;
      background-color: rgb(var(--mdui-color-surface-container));
-     border-radius: var(--mdui-shape-corner-extra-small);
+     border-radius: var(--mdui-shape-corner-small);
  }
 
 .mdui-prose [class*=language-]>button.copy {
