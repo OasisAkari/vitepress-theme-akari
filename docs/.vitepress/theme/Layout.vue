@@ -85,6 +85,12 @@ const darkmodeSelected = ref(false)
 
 watch(themeMode, (mode: string) => {
     darkmodeSelected.value = mode === 'dark'
+    // add vitepress defult theme flag, this works for code block theme
+    if(mode === 'dark'){
+        document.getElementsByTagName('html')[0].classList.add('dark')
+    }else{
+        document.getElementsByTagName('html')[0].classList.remove('dark')
+    }
 })
 
 watch(themeColor, (color: string) => {

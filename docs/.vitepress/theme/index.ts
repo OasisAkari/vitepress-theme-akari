@@ -8,6 +8,15 @@ import googleAnalytics from 'vitepress-plugin-google-analytics'
 import { createPinia } from 'pinia'
 import defineConfig from '../config';
 
+// import vitepress default style
+import 'vitepress/dist/client/theme-default/styles/icons.css';
+import 'vitepress/dist/client/theme-default/styles/vars.css';
+import 'vitepress/dist/client/theme-default/styles/components/vp-code-group.css';
+import 'vitepress/dist/client/theme-default/styles/components/vp-code.css';
+import 'vitepress/dist/client/theme-default/styles/components/vp-doc.css';
+import 'vitepress/dist/client/theme-default/styles/components/vp-sponsor.css';
+import './vitepress-default-style.css'
+
 
 
 export default {
