@@ -364,7 +364,7 @@ watch(contentLoaded, (loaded: any) => {
     width: 100%;
     object-fit: cover;
     border-radius: var(--mdui-shape-corner-extra-large);
-    transition: all var(--mdui-motion-easing-standard) var(--mdui-motion-duration-short4);
+    /* transition: all var(--mdui-motion-easing-standard) var(--mdui-motion-duration-short4); */
     box-shadow: var(--mdui-elevation-level3);
     z-index: 20;
     height: auto;
@@ -384,7 +384,7 @@ watch(contentLoaded, (loaded: any) => {
     top: 0;
     left: 0;
     opacity: 0;
-    transition: all var(--mdui-motion-easing-standard) var(--mdui-motion-duration-short4);
+    /* transition: all var(--mdui-motion-easing-standard) var(--mdui-motion-duration-short4); */
 }
 
 .opacity {
