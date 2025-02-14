@@ -9,7 +9,7 @@ import { translations } from '../translations';
 
 
 const store = useThemeGlobalStore();
-const { themeMode, themeColor, fromRouter, pageViews, boxData, backgroundImage, backgroundImageDark, contentLoaded } = storeToRefs(store);
+const { themeMode, themeColor, fromRouter, pageViews, boxData, backgroundImage, backgroundImageDark } = storeToRefs(store);
 
 
 const data = useData()
@@ -109,6 +109,7 @@ const emits = defineEmits(['scrollToHash', 'imageLoaded', 'imagesCount', 'images
 
 const imagesCount = ref(0)
 const imagesLoaded = ref(0)
+const contentLoaded = ref(false)
 
 onMounted(() => {
     console.log('post-page-loaded')
