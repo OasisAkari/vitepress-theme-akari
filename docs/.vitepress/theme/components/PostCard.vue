@@ -10,7 +10,7 @@ import { setColorScheme } from 'mdui/functions/setColorScheme';
 
 const store = useThemeGlobalStore();
 
-const { themeMode, backgroundImage } = storeToRefs(store);
+const { themeMode } = storeToRefs(store);
 
 const props = defineProps({
     post: Object as () => Post,
@@ -144,7 +144,7 @@ onMounted(() => {
 
 <template>
     <div class="post-card-layout-container" ref="postCardLayoutContainer" @click="" :card-color="color" :card-color-dark="color_dark">
-        <mdui-card class="post-card-layout" variant="filled" @click.prevent="" clickable :href="url" :class="{ 'has-image': backgroundImage }">
+        <mdui-card class="post-card-layout" variant="filled" @click.prevent="" clickable :href="url">
             <div class="post-card" :class="{ 'has-image': props.post?.cover_image }">
                 <img ref="coverImgDarkRef" alt="" draggable="false" @contextmenu.prevent class="post-img-dark"
                     v-if="cover_image_dark" :class="{ 'opacity': use_dark }">
@@ -171,25 +171,15 @@ onMounted(() => {
 </template>
 
 <style>
-.post-card-layout-container{
-    border-radius: var(--mdui-shape-corner-large);
-    background-color: unset!important;
-    box-shadow: var(--mdui-elevation-level1);
-}
-
 .post-card-layout {
     display: flex;
     flex-direction: column;
     width: 100%;
     margin: 0 auto;
-    margin-top: 20px;
     margin-bottom: 20px;
+    /* box-shadow: var(--mdui-elevation-level3); */
     transition: border-radius var(--mdui-motion-easing-standard) var(--mdui-motion-duration-long1);
     border-radius: var(--mdui-shape-corner-large);
-}
-
-.post-card-layout.has-image {
-    background-color: rgba(var(--mdui-color-surface-container-highest), 0.5);
 }
 
 .post-card-layout:hover {

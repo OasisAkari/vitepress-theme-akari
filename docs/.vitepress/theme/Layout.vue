@@ -35,7 +35,7 @@ const smoothScroll = ref(false)
 
 const globalStore = useThemeGlobalStore()
 
-const { themeMode, themeColor, boxData, fromRouter, pageViews, showScrollTopButton, startTransition, contentLoaded, backgroundImage, backgroundImageDark } = storeToRefs(globalStore)
+const { themeMode, themeColor, boxData, fromRouter, pageViews, showScrollTopButton, startTransition } = storeToRefs(globalStore)
 
 const modeButtonRef = ref()
 
@@ -53,15 +53,13 @@ watch(themeMode, (theme: any) => {
     }
     if (themeTransition && modeButtonRef.value) {
         let buttonRect = modeButtonRef.value.getBoundingClientRect()
-        console.log(buttonRect)
         let x = buttonRect.x + buttonRect.width / 2;
         let y = buttonRect.y + buttonRect.height / 2;
         const endRadius = Math.hypot(
-            Math.max(x, window.innerWidth - x),
-            Math.max(y, window.innerHeight - y)
+            Math.max(x, innerWidth - x),
+            Math.max(y, innerHeight - y)
         );
         themeTransition.ready.then(() => {
-            console.log('x: ' + x + ' y: ' + y)
             document.documentElement.animate(
                 {
                     clipPath: [
@@ -81,10 +79,10 @@ watch(themeMode, (theme: any) => {
 
 function toggleTheme() {
     themeMode.value = themeMode.value === 'light' ? 'dark' : 'light'
-    switchBackgroundImage()
 }
 
 const darkmodeSelected = ref(false)
+
 
 function watchThemeMode() {
     darkmodeSelected.value = themeMode.value === 'dark'
@@ -108,14 +106,6 @@ watch(themeColor, (color: string) => {
 
 watch(drawerOpen, (open) => {
     menuButtonSelected.value = open
-    if (open) {
-        gsap.fromTo('mdui-list-item', { x: -200 }, {
-            x: 0,
-            duration: 0.3,
-            stagger: 0.02,
-            ease: 'power2.out'
-        })
-    }
 })
 
 const layoutRef = ref<HTMLElement | undefined>()
@@ -123,6 +113,7 @@ const containerRef = ref<HTMLElement | undefined>()
 const loadingBarRef = ref<HTMLElement | undefined>()
 
 var transition: any = null
+const contentLoaded = ref(false)
 
 router.onBeforeRouteChange = async () => {
     contentLoaded.value = false
@@ -137,7 +128,7 @@ router.onBeforeRouteChange = async () => {
     }
 }
 
-router.onAfterRouteChange = async () => {
+router.onAfterRouteChanged = async () => {
     pageViews.value = 0
     if (transition) {
         if (containerRef.value) {
@@ -221,7 +212,6 @@ router.onAfterRouteChange = async () => {
                 startTransition.value = false
             )
 
-
         } else {
             if (!location.hash) {
                 layoutRef.value?.scrollTo(0, 0)
@@ -251,7 +241,7 @@ router.onAfterRouteChange = async () => {
                 }
                 listen()
             })
-            await listenFlagState.then((loaded) => {
+            await listenFlagState.then(loaded => {
                 if (containerRef.value) {
                     gsap.fromTo(containerRef.value, {
                         opacity: 0, y: boxData.value.y - 96,
@@ -273,6 +263,7 @@ router.onAfterRouteChange = async () => {
                     })
                 }
             })
+
         } else {
             if (!location.hash) {
                 layoutRef.value?.scrollTo(0, 0)
@@ -288,8 +279,6 @@ router.onAfterRouteChange = async () => {
             })
         })
     }
-    switchBackgroundImage()
-
 }
 
 const title = ref(themeConfig.title)
@@ -299,24 +288,23 @@ function onScroll(e: any) {
     showScrollTopButton.value = e.target.scrollTop > 100
 }
 
-const navDrawerRef = ref<HTMLElement | undefined>()
-
-
 onMounted(() => {
+    console.log(page.value)
     if (layoutRef.value) {
         if (!fromRouter.value) {
-            changeFontSize({ width: window.innerWidth })
+            changeFontSize({width: window.innerWidth})
         }
         observeResize(layoutRef.value, function (entry, observer) {
             let calcWidth = (Math.min(1000, entry.contentRect.width)) * (0.95 - Math.max(0.05 * (window.innerWidth - 840) / 840, 0))
             if (containerRef.value) {
                 containerRef.value.style.width = calcWidth + 'px'
             }
-            changeFontSize({ width: calcWidth })
+            changeFontSize({width: calcWidth})
         })
     }
     globalStore.flushThemeMode()
     setTheme((themeMode.value as any))
+
     if (frontmatter.value.layout === 'redirect') {
         location.href = withBase(frontmatter.value.url)
     }
@@ -336,10 +324,9 @@ onMounted(() => {
     let docSearchConfig = defineConfig.themeConfig.docSearch
     if (docSearchConfig && docSearchConfig.apiKey && docSearchConfig.appId && docSearchConfig.indexName) {
 
-        import('@docsearch/js').then((docsearchModule) => {
+        import('@docsearch/js').then((docsearch) => {
             let t = translations.docSearch
-            let docsearch = docsearchModule.default
-            docsearch({
+            docsearch.default({
                 container: '.search-button',
                 translations: t,
                 ...docSearchConfig
@@ -353,19 +340,6 @@ onMounted(() => {
             window.scrollTo(0, 0) // fix wrong position when anchor link clicked... idk why this happens
         },
     );
-    observeResize('.background-image', function (entry, observer) {
-        if (backgroundImage.value) {
-            if (entry.contentRect.width > 840) {
-                navDrawerRef.value?.shadowRoot?.querySelector('.panel')?.setAttribute('style', 'background-color: unset')
-            } else {
-                navDrawerRef.value?.shadowRoot?.querySelector('.panel')?.setAttribute('style', 'background-color: revent-layer')
-            }
-        } else {
-            navDrawerRef.value?.shadowRoot?.querySelector('.panel')?.setAttribute('style', 'background-color: revent-layer')
-        }
-    })
-    switchBackgroundImage()
-
 
 })
 
@@ -433,60 +407,15 @@ function onImagesCount(v: number) {
 }
 
 
-function switchBackgroundImage() {
-    if (!defineConfig.themeConfig.use_blur_background) {
-        return
-    }
-    if (backgroundImage.value) {
-        if (themeMode.value === 'light') {
-            document.querySelector('.background-image')?.setAttribute('style', `background-image: url(${backgroundImage.value})`)
-        } else
-            document.querySelector('.background-image')?.setAttribute('style', `background-image: url(${backgroundImageDark.value})`)
-        document.querySelector('.top-app-bar')?.classList.add('nocolor')
-
-        gsap.to('.background-image', {
-            opacity: 0.3,
-            duration: 1.5,
-            delay: 1,
-            position: 'fixed',
-            overwrite: true
-        })
-        if (window.innerWidth > 840) {
-            navDrawerRef.value?.shadowRoot?.querySelector('.panel')?.setAttribute('style', 'background-color: unset')
-        } else {
-            navDrawerRef.value?.shadowRoot?.querySelector('.panel')?.setAttribute('style', 'background-color: revent-layer')
-        }
-
-    } else {
-        gsap.to('.background-image', {
-            opacity: 0,
-            duration: 1.5,
-        }).then(() => {
-            document.querySelector('.background-image')?.setAttribute('style', 'background-image: unset')
-            document.querySelector('.top-app-bar')?.classList.remove('nocolor')
-            navDrawerRef.value?.shadowRoot?.querySelector('.panel')?.setAttribute('style', 'background-color: revent-layer')
-        })
-
-    }
-}
-
-watch(router.route, (route) => {
-    backgroundImage.value = undefined
-    backgroundImageDark.value = undefined
-})
-
-
 </script>
 
 <template>
-    <div class="background-image"></div>
     <mdui-layout>
         <mdui-top-app-bar class="top-app-bar" scroll-behavior="elevate" scroll-target=".layout-main"
             :class="{ 'start-transition': startTransition }">
             <mdui-linear-progress class="loading-bar" ref="loadingBarRef" :max="imagesCount"
                 :value="imageLoaded"></mdui-linear-progress>
-            <mdui-button-icon class="menu-button" @click="drawerOpen = !drawerOpen" :selected="menuButtonSelected"
-                selected-icon="menu_open">
+            <mdui-button-icon class="menu-button" @click="drawerOpen = !drawerOpen">
                 <mdui-icon-menu></mdui-icon-menu>
             </mdui-button-icon>
             <mdui-top-app-bar-title>{{ title }}<span class="subtitle"> · {{
@@ -498,7 +427,7 @@ watch(router.route, (route) => {
             </mdui-button-icon>
         </mdui-top-app-bar>
         <mdui-navigation-drawer :open="drawerOpen" class="mdui-navigation-drawer" @overlay-click="drawerOpen = false"
-            :class="{ 'start-transition': startTransition }" ref="navDrawerRef">
+            :class="{ 'start-transition': startTransition }">
             <div class="navigation-list">
                 <NavList></NavList>
             </div>
@@ -527,31 +456,11 @@ watch(router.route, (route) => {
 </template>
 
 <style>
-.background-image {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    z-index: -1;
-    filter: blur(20px);
-    opacity: 0;
-    transition: all var(--mdui-motion-duration-short4);
-
-}
-
-
 .top-app-bar {
     justify-content: center;
     align-items: center;
     position: relative;
     transition: background-color var(--mdui-motion-duration-short4) cubic-bezier();
-}
-
-.nocolor {
-    background-color: unset;
 }
 
 .top-app-bar.start-transition {
@@ -595,7 +504,6 @@ watch(router.route, (route) => {
     word-wrap: break-word;
     border-radius: var(--mdui-shape-corner-large);
     overflow: hidden;
-    margin-bottom: 10px;
 }
 
 .container-main-area {

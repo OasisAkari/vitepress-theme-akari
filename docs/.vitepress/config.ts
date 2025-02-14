@@ -45,7 +45,6 @@ const themeConfig: AkariThemeConfig = {
     ],
     copyRight: '©2024 <Your name>',
   },
-  use_blur_background: false,
 }
 
 const defineConfig = { // Docs: https://vitepress.dev/reference/site-config
