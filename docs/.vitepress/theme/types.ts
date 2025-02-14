@@ -66,7 +66,8 @@ interface AkariThemeConfig {
         text: string
       }
     }
-  }
+  },
+  use_blur_background: boolean,
 
 }
 
