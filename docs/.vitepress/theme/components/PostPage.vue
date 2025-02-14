@@ -335,7 +335,7 @@ const hideTitle = ref(false)
                 <div class="post-page-card-grid">
                     <h1 class="post-page-card-title" ref="titleRef">{{ frontmatter.title }}</h1>
                     <div class="post-page-card-date" :class="{'has-pageview': pageViews !== 0}">{{ dateText }}</div>
-                    <div class="post-page-card-views" :class="{ 'show': pageViews !== 0, 'show-desc': viewText } " v-if="pageViews !== 0">{{
+                    <div class="post-page-card-views" :class="{ 'show': pageViews !== 0, 'show-desc': viewText } " v-show="pageViews !== 0">{{
                         viewText ? viewText : pageViews + translations.components.viewCounts }}</div>
                 </div>
 
