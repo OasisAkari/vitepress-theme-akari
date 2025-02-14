@@ -9,7 +9,7 @@ import { translations } from '../translations';
 
 
 const store = useThemeGlobalStore();
-const { themeMode, themeColor, fromRouter, pageViews, boxData } = storeToRefs(store);
+const { themeMode, themeColor, fromRouter, pageViews, boxData, backgroundImage, backgroundImageDark, contentLoaded } = storeToRefs(store);
 
 
 const data = useData()
@@ -24,11 +24,14 @@ const dateText = ref('')
 const viewText = ref('')
 
 
-
 const cover_image = ref(frontmatter.value.cover_image);
 const cover_image_dark = ref(frontmatter.value.cover_image_dark);
 const color = ref(frontmatter.value.color);
 const color_dark = ref(frontmatter.value.color_dark);
+
+
+backgroundImage.value = cover_image.value
+backgroundImageDark.value = cover_image_dark.value
 
 const noCover = ref(false)
 const noColor = ref(false)
@@ -38,6 +41,7 @@ const coverForceDark = ref(false)
 if (!cover_image.value) {
     if (cover_image_dark.value) {
         cover_image.value = cover_image_dark.value
+        backgroundImage.value = cover_image_dark.value
         coverForceDark.value = true
     }
 }
@@ -45,11 +49,14 @@ if (!cover_image.value) {
 if (!cover_image_dark.value) {
     if (cover_image.value) {
         cover_image_dark.value = cover_image.value
+        backgroundImageDark.value = cover_image.value
         coverForceLight.value = true
     }
 }
 
 if (!cover_image.value) {
+    backgroundImage.value = undefined
+    backgroundImageDark.value = undefined
     noCover.value = true
 }
 
@@ -84,7 +91,7 @@ function toggleTheme(themeMode: any) {
         }
     }
 
-    if (fromRouter.value && noColor.value){
+    if (fromRouter.value && noColor.value) {
         return
     }
 
@@ -102,7 +109,6 @@ const emits = defineEmits(['scrollToHash', 'imageLoaded', 'imagesCount', 'images
 
 const imagesCount = ref(0)
 const imagesLoaded = ref(0)
-const contentLoaded = ref(false)
 
 onMounted(() => {
     console.log('post-page-loaded')
@@ -192,6 +198,10 @@ onMounted(() => {
 
             }
         }
+
+        if (backgroundImage.value && postPageBackgroundRef.value) {
+            postPageBackgroundRef.value.classList.add('has-image')
+        }
     })
 })
 
@@ -254,7 +264,7 @@ watch(contentLoaded, (loaded: any) => {
         }
 
         if (postPageBackgroundRef.value) {
-            changeFontSize({width: postPageBackgroundRef.value.clientWidth, timeline: AnimateTimeline, position: 0.2, force: true})
+            changeFontSize({ width: postPageBackgroundRef.value.clientWidth, timeline: AnimateTimeline, position: 0.2, force: true })
         }
 
         if (titleRef.value instanceof HTMLElement && fromRouter.value) {
@@ -293,15 +303,20 @@ watch(contentLoaded, (loaded: any) => {
                 }
             }, 0.2)
         }
+
     }
 })
+
+
+const hideTitle = ref(false)
 
 </script>
 
 <template>
     <div variant="filled" class="post-page-background" ref="postPageBackgroundRef">
         <div class="post-page-card" :class="{ 'has-image': !noCover }">
-            <div class="post-page-img" ref="postImgRef" :class="{ 'noRoute': !fromRouter }">
+            <div class="post-page-img" ref="postImgRef" :class="{ 'noRoute': !fromRouter }"
+                @click="hideTitle = !hideTitle">
                 <img :src="withBase(cover_image_dark)" alt="" draggable="false" @contextmenu.prevent
                     class="post-image-dark" :class="{ 'noRoute': !fromRouter, 'opacity': use_dark }" v-if="!noCover"
                     width="2000" height="1000">
@@ -313,18 +328,19 @@ watch(contentLoaded, (loaded: any) => {
                 <mdui-chip v-for="category in frontmatter.categorys" style="margin-left: 5px; z-index: 50;">{{ category
                     }}</mdui-chip>
             </div>
-            <div class="post-page-card-content" 
-                :class="{ 'has-image': !noCover, 'force-light': coverForceLight, 'force-dark': coverForceDark }">
+            <div class="post-page-card-content"
+                :class="{ 'has-image': !noCover, 'force-light': coverForceLight, 'force-dark': coverForceDark }"
+                :style="{ 'opacity': hideTitle ? 0 : 1 }" @click="hideTitle = noCover ? false : !hideTitle">
                 <div class="post-page-card-grid">
                     <h1 class="post-page-card-title" ref="titleRef">{{ frontmatter.title }}</h1>
                     <div class="post-page-card-date" :class="{'has-pageview': pageViews !== 0}">{{ dateText }}</div>
-                    <div class="post-page-card-views" :class="{ 'show': pageViews !== 0, 'show-desc': viewText }" v-if="pageViews !== 0">{{
-            viewText ? viewText : pageViews + translations.components.viewCounts }}</div>
+                    <div class="post-page-card-views" :class="{ 'show': pageViews !== 0, 'show-desc': viewText } " v-if="pageViews !== 0">{{
+                        viewText ? viewText : pageViews + translations.components.viewCounts }}</div>
                 </div>
 
             </div>
         </div>
-        <div class="post-page-content-area" ref="postContentRef" :class="{ 'noRoute': !fromRouter }">
+        <div class="post-page-content-area" ref="postContentRef" :class="{ 'noRoute': !fromRouter }" id="post-content">
             <div class="mdui-prose">
                 <Content />
             </div>
@@ -407,6 +423,9 @@ watch(contentLoaded, (loaded: any) => {
 .post-page-card-content.has-image {
     position: absolute;
     padding-top: 0;
+    color: rgba(var(--mdui-color-on-primary-container), 1);
+    z-index: 30;
+    mix-blend-mode: luminosity;
 }
 
 .post-page-card-content.force-light {
@@ -450,7 +469,7 @@ watch(contentLoaded, (loaded: any) => {
 }
 
 
-.has-pageview::after {
+.post-page-card-date.has-pageview::after {
     content: "";
     width: 3px;
     height: 3px;
@@ -496,7 +515,13 @@ watch(contentLoaded, (loaded: any) => {
     padding-bottom: 32px;
     box-shadow: var(--mdui-elevation-level1);
     margin-bottom: 10px;
-    background-color: rgb(var(--mdui-color-surface-container-highest));
+    background-color: rgba(var(--mdui-color-surface-container-highest), 1);
+    transition: background-color var(--mdui-motion-easing-standard) var(--mdui-motion-duration-short4);
+}
+
+.post-page-background.has-image {
+    background-color: rgba(var(--mdui-color-surface-container-highest), 0.5);
+
 }
 
 .post-page-content-area {

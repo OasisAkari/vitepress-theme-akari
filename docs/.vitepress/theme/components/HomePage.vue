@@ -12,7 +12,7 @@ const router = useRouter();
 
 const store = useThemeGlobalStore();
 
-const { hideLayouts, themeMode, themeColor } = storeToRefs(store);
+const { hideLayouts, themeMode, themeColor, backgroundImage, backgroundImageDark } = storeToRefs(store);
 
 const useDark = ref(false)
 
@@ -99,6 +99,8 @@ function selectItem(item: any) {
     }
 }
 
+backgroundImage.value = frontmatter.value.cover_image
+backgroundImageDark.value = frontmatter.value.cover_image_dark
 
 </script>
 

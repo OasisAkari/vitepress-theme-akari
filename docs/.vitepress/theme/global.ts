@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-import defineConfig from '../config.js'
+import defineConfig from '../config'
 
 
 export const useThemeGlobalStore = defineStore('theme', {
@@ -19,6 +19,9 @@ export const useThemeGlobalStore = defineStore('theme', {
             pageViews: 0,
             startTransition: false,
             disableSiteNotice: false, 
+            contentLoaded: false,
+            backgroundImage: undefined,
+            backgroundImageDark: undefined,
         }
     },
     actions: {
@@ -29,5 +32,6 @@ export const useThemeGlobalStore = defineStore('theme', {
             let currentTime = new Date().getHours()
             this.themeMode = currentTime >= 18 || currentTime <= 6 ? 'dark' : 'light'
         }
+
     }
   })
