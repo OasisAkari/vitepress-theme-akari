@@ -202,6 +202,9 @@ onMounted(() => {
         if (backgroundImage.value && postPageBackgroundRef.value) {
             postPageBackgroundRef.value.classList.add('has-image')
         }
+        document.querySelectorAll('.mdui-prose a').forEach((e: any) => {
+            e.classList.add('external-link')
+        })
     })
 })
 
@@ -423,7 +426,7 @@ const hideTitle = ref(false)
 .post-page-card-content.has-image {
     position: absolute;
     padding-top: 0;
-    color: rgba(var(--mdui-color-on-primary-container), 1);
+    color: rgba(var(--mdui-color-on-primary-container), 0.8);
     z-index: 30;
     mix-blend-mode: luminosity;
 }
@@ -587,5 +590,15 @@ const hideTitle = ref(false)
         padding-bottom: 18px;
     }
 
+}
+
+.external-link::after {
+  content: 'link';
+  font-family: 'Material Icons';
+  font-size: 14px;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  padding: 2px;
+  background-color: rgb(var(--mdui-color-surface-variant));
 }
 </style>

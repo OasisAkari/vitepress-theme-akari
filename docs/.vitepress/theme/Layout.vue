@@ -461,10 +461,12 @@ function switchBackgroundImage() {
         gsap.to('.background-image', {
             opacity: 0,
             duration: 1.5,
-        }).then(() => {
-            document.querySelector('.background-image')?.setAttribute('style', 'background-image: unset')
-            document.querySelector('.top-app-bar')?.classList.remove('nocolor')
-            navDrawerRef.value?.shadowRoot?.querySelector('.panel')?.setAttribute('style', 'background-color: revent-layer')
+            overwrite: true,
+            onComplete: () => {
+                document.querySelector('.top-app-bar')?.classList.remove('nocolor')
+                document.querySelector('.background-image')?.setAttribute('style', 'background-image: unset')
+                navDrawerRef.value?.shadowRoot?.querySelector('.panel')?.setAttribute('style', 'background-color: revent-layer')
+            }
         })
 
     }
@@ -481,8 +483,7 @@ watch(router.route, (route) => {
 <template>
     <div class="background-image"></div>
     <mdui-layout>
-        <mdui-top-app-bar class="top-app-bar" scroll-behavior="elevate" scroll-target=".layout-main"
-            :class="{ 'start-transition': startTransition }">
+        <mdui-top-app-bar class="top-app-bar" scroll-behavior="elevate" scroll-target=".layout-main">
             <mdui-linear-progress class="loading-bar" ref="loadingBarRef" :max="imagesCount"
                 :value="imageLoaded"></mdui-linear-progress>
             <mdui-button-icon class="menu-button" @click="drawerOpen = !drawerOpen" :selected="menuButtonSelected"
@@ -554,9 +555,9 @@ watch(router.route, (route) => {
     background-color: unset;
 }
 
-.top-app-bar.start-transition {
+/* .top-app-bar.start-transition {
     view-transition-name: top-app-bar;
-}
+} */
 
 .loading-bar {
     position: absolute;
