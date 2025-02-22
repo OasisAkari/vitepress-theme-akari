@@ -601,4 +601,27 @@ const hideTitle = ref(false)
   padding: 2px;
   background-color: rgb(var(--mdui-color-surface-variant));
 }
+
+h1 > a.external-link::after,
+h2 > a.external-link::after,
+h3 > a.external-link::after,
+h4 > a.external-link::after,
+h5 > a.external-link::after,
+h6 > a.external-link::after {
+  content: 'anchor';
+  opacity: 0;
+  transition: all var(--mdui-motion-easing-standard) var(--mdui-motion-duration-short3);
+}
+
+h1 > a.external-link:hover::after,
+h2 > a.external-link:hover::after,
+h3 > a.external-link:hover::after,
+h4 > a.external-link:hover::after,
+h5 > a.external-link:hover::after,
+h6 > a.external-link:hover::after {
+  content: 'anchor';
+  opacity: 1;
+}
+
+
 </style>
