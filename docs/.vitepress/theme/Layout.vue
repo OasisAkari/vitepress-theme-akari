@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import '@mdui/icons/menu.js';
+import '@mdui/icons/menu-open.js';
 import '@mdui/icons/search.js';
-import '@mdui/icons/dark-mode--outlined.js';
+import '@mdui/icons/dark-mode.js';
+import '@mdui/icons/light-mode--outlined.js';
 import { gsap } from 'gsap';
 import { useData, useRouter, withBase } from 'vitepress'
 import { onMounted, ref, watch, nextTick } from 'vue'
@@ -286,6 +288,8 @@ router.onAfterRouteChange = async () => {
             res.json().then((data) => {
                 pageViews.value = data.counts
             })
+        }).catch((error) => {
+            console.log('Views counter error: ', error)
         })
     }
     switchBackgroundImage()
@@ -489,13 +493,16 @@ watch(router.route, (route) => {
             <mdui-button-icon class="menu-button" @click="drawerOpen = !drawerOpen" :selected="menuButtonSelected"
                 selected-icon="menu_open">
                 <mdui-icon-menu></mdui-icon-menu>
+                <mdui-icon-menu-open slot="selected-icon" name="menu_open"></mdui-icon-menu-open>
             </mdui-button-icon>
             <mdui-top-app-bar-title>{{ title }}<span class="subtitle"> · {{
                 themeConfig.subtitle }}</span></mdui-top-app-bar-title>
             <div class="search-button" @click="">
             </div>
-            <mdui-button-icon class="mode-button" @click="toggleTheme" icon="light_mode--outlined"
+            <mdui-button-icon class="mode-button" @click="toggleTheme"
                 selected-icon="dark_mode" :selected="darkmodeSelected" ref="modeButtonRef">
+                <mdui-icon-light-mode--outlined></mdui-icon-light-mode--outlined>
+                <mdui-icon-dark-mode slot="selected-icon" name="dark_mode"></mdui-icon-dark-mode>
             </mdui-button-icon>
         </mdui-top-app-bar>
         <mdui-navigation-drawer :open="drawerOpen" class="mdui-navigation-drawer" @overlay-click="drawerOpen = false"

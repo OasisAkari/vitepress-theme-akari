@@ -4,6 +4,7 @@ import { gsap } from 'gsap';
 import { useThemeGlobalStore } from '../global';
 import { storeToRefs } from 'pinia'
 import { translations } from '../translations';
+import '@mdui/icons/keyboard-arrow-up.js';
 
 
 const store = useThemeGlobalStore();
@@ -80,7 +81,8 @@ function s() {
     <mdui-tooltip :content=translations.components.clickToTop>
         <div class="click-to-top" @click="s" :class="{ 'start-transition': startTransition }" ref="clickToTopButtonRef">
 
-            <mdui-fab icon="keyboard_arrow_up">
+            <mdui-fab icon="up" variant="secondary">
+                <mdui-icon-keyboard-arrow-up slot="icon" name="up"></mdui-icon-keyboard-arrow-up>
             </mdui-fab>
 
         </div>

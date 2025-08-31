@@ -6,6 +6,8 @@ import { storeToRefs } from 'pinia'
 import defineConfig from '../../config';
 import { translations } from '../translations';
 
+import '@mdui/icons/close.js';
+
 
 const store = useThemeGlobalStore();
 
@@ -22,7 +24,7 @@ const textContainerRef = ref()
 onMounted(() => {
     let noticeList = defineConfig.themeConfig.siteNotice
 
-    if (noticeList && noticeList.length == 0) {
+    if (noticeList && noticeList.length === 0) {
         disableSiteNotice.value = true
         return
     }
@@ -129,7 +131,9 @@ function close_notice() {
             <div class="site-notice-text" ref="textRef"></div>
         </div>
         <div class="site-notice-background" ref="backgroundRef" :class="{ 'start-transition': startTransition }">
-            <mdui-button-icon class="close-sitenotice" icon="close" @click="close_notice"></mdui-button-icon>
+            <mdui-button-icon class="close-sitenotice" icon="mdui-icon-close" @click="close_notice">
+                <mdui-icon-close></mdui-icon-close>
+            </mdui-button-icon>
         </div>
     </div>
 </template>
@@ -160,8 +164,8 @@ function close_notice() {
 
 .site-notice-background {
 
-    background-color: rgb(var(--mdui-color-primary-container));
-    color: rgb(var(--mdui-color-on-primary-container));
+    background-color: rgb(var(--mdui-color-secondary-container));
+    color: rgb(var(--mdui-color-on-secondary-container));
     border-radius: var(--mdui-shape-corner-medium);
 
     transition: width var(--mdui-motion-easing-standard) var(--mdui-motion-duration-short1);
@@ -190,5 +194,9 @@ function close_notice() {
 
 .site-notice-text-container.start-transition {
     view-transition-name: site-notice-text-container;
+}
+
+.site-notice-text a{
+    text-decoration: none;
 }
 </style>

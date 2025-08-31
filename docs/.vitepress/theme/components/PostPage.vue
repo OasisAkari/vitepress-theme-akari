@@ -6,7 +6,8 @@ import { useThemeGlobalStore } from '../global';
 import { storeToRefs } from 'pinia'
 import { formatDateString, changeFontSize, fontSizeData } from '../utils'
 import { translations } from '../translations';
-
+import '@mdui/icons/access-time.js';
+import '@mdui/icons/link.js';
 
 const store = useThemeGlobalStore();
 const { themeMode, themeColor, fromRouter, pageViews, boxData, backgroundImage, backgroundImageDark, contentLoaded } = storeToRefs(store);
@@ -202,8 +203,12 @@ onMounted(() => {
         if (backgroundImage.value && postPageBackgroundRef.value) {
             postPageBackgroundRef.value.classList.add('has-image')
         }
+        let ext_link_class = document.createElement('mdui-icon-link')
+        ext_link_class.classList.add('external-link')
         document.querySelectorAll('.mdui-prose a').forEach((e: any) => {
-            e.classList.add('external-link')
+            if (!e.querySelector('.external-link')) {
+                e.appendChild(ext_link_class.cloneNode(true))
+            }
         })
     })
 })
@@ -336,9 +341,10 @@ const hideTitle = ref(false)
                 :style="{ 'opacity': hideTitle ? 0 : 1 }" @click="hideTitle = noCover ? false : !hideTitle">
                 <div class="post-page-card-grid">
                     <h1 class="post-page-card-title" ref="titleRef">{{ frontmatter.title }}</h1>
-                    <div class="post-page-card-date" :class="{'has-pageview': pageViews !== 0}">{{ dateText }}</div>
-                    <div class="post-page-card-views" :class="{ 'show': pageViews !== 0, 'show-desc': viewText } " v-show="pageViews !== 0">{{
-                        viewText ? viewText : pageViews + translations.components.viewCounts }}</div>
+                    <div class="post-page-card-date" :class="{ 'has-pageview': pageViews !== 0 }">{{ dateText }}</div>
+                    <div class="post-page-card-views" :class="{ 'show': pageViews !== 0, 'show-desc': viewText }"
+                        v-show="pageViews !== 0">{{
+                            viewText ? viewText : pageViews + translations.components.viewCounts }}</div>
                 </div>
 
             </div>
@@ -592,36 +598,34 @@ const hideTitle = ref(false)
 
 }
 
-.external-link::after {
-  content: 'link';
-  font-family: 'Material Icons';
-  font-size: 14px;
-  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
-  border-radius: 50%;
-  padding: 2px;
-  background-color: rgb(var(--mdui-color-surface-variant));
+.external-link {
+    width:16px;
+    height: 16px;
+    display: inline-flex;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    padding: 2px;
+    background-color: rgb(var(--mdui-color-surface-variant));
+}
+    
+h1>a,
+h2>a,
+h3>a,
+h4>a,
+h5>a,
+h6>a {
+    content: 'anchor';
+    opacity: 0;
+    transition: all var(--mdui-motion-easing-standard) var(--mdui-motion-duration-short3);
 }
 
-h1 > a.external-link::after,
-h2 > a.external-link::after,
-h3 > a.external-link::after,
-h4 > a.external-link::after,
-h5 > a.external-link::after,
-h6 > a.external-link::after {
-  content: 'anchor';
-  opacity: 0;
-  transition: all var(--mdui-motion-easing-standard) var(--mdui-motion-duration-short3);
+h1>a:hover,
+h2>a:hover,
+h3>a:hover,
+h4>a:hover,
+h5>a:hover,
+h6>a:hover {
+    content: 'anchor';
+    opacity: 1;
 }
-
-h1 > a.external-link:hover::after,
-h2 > a.external-link:hover::after,
-h3 > a.external-link:hover::after,
-h4 > a.external-link:hover::after,
-h5 > a.external-link:hover::after,
-h6 > a.external-link:hover::after {
-  content: 'anchor';
-  opacity: 1;
-}
-
-
 </style>

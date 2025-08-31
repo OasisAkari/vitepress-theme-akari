@@ -6,6 +6,10 @@ const themeConfig: AkariThemeConfig = {
   nav: [
     { text: 'Home', link: '/index.html' },
     { text: 'Hello World!', link: '/hello-world1.html' },
+    { text: 'Hello World!', link: '/hello-world2.html' },
+    { text: 'Hello World!', link: '/hello-world1 copy.html' },
+    { text: 'Hello World!', link: '/hello-world1 copy2.html' },
+    { text: 'Code Block', link: '/code-block.html' },
   ],
   hideFromHomeLayouts: ['home'],
   defaultColorsSet: ['#ac2b21', '#8e2fa8', '#285f9f', '#2e6c29', '#675f1a', '#2b6672'],
@@ -94,14 +98,14 @@ const defineConfig = { // Docs: https://vitepress.dev/reference/site-config
       'link',
       { href: 'https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400..600&display=swap', rel: 'stylesheet' }
     ],
-    [
-      'link',
-      { href: 'https://fonts.googleapis.com/icon?family=Material+Icons+Outlined', rel: 'stylesheet' }
-    ],
-    [
-      'link',
-      { href: 'https://fonts.googleapis.com/icon?family=Material+Icons', rel: 'stylesheet' }
-    ],
+    // [
+    //   'link',
+    //   { href: 'https://fonts.googleapis.com/icon?family=Material+Icons+Outlined', rel: 'stylesheet' }
+    // ],
+    // [
+    //   'link',
+    //   { href: 'https://fonts.googleapis.com/icon?family=Material+Icons', rel: 'stylesheet' }
+    // ],
   ],
   ignoreDeadLinks: false,
   appearance: false,
