@@ -282,7 +282,7 @@ router.onAfterRouteChange = async () => {
         }
     }
     transition = null
-    if (themeConfig.themeConfig.viewsCounter) {
+    if (themeConfig.themeConfig.viewsCounter && !page.value.isNotFound) {
         console.log(router.route.path)
         fetch(themeConfig.themeConfig.viewsCounter + `?path=${router.route.path}`).then((res) => {
             res.json().then((data) => {
@@ -329,15 +329,13 @@ onMounted(() => {
         layoutRef.value.addEventListener('scroll', onScroll)
 
     }
-    if (page.value) {
-        if (themeConfig.themeConfig.viewsCounter && !page.value.isNotFound) {
-            console.log(router.route.path)
-            fetch(themeConfig.themeConfig.viewsCounter + `?path=${router.route.path}`).then((res) => {
-                res.json().then((data) => {
-                    pageViews.value = data.counts
-                })
+    if (themeConfig.themeConfig.viewsCounter && !page.value.isNotFound) {
+        console.log(router.route.path)
+        fetch(themeConfig.themeConfig.viewsCounter + `?path=${router.route.path}`).then((res) => {
+            res.json().then((data) => {
+                pageViews.value = data.counts
             })
-        }
+        })
     }
     let docSearchConfig = defineConfig.themeConfig.docSearch
     if (docSearchConfig && docSearchConfig.apiKey && docSearchConfig.appId && docSearchConfig.indexName) {
@@ -501,8 +499,8 @@ watch(router.route, (route) => {
                 themeConfig.subtitle }}</span></mdui-top-app-bar-title>
             <div class="search-button" @click="">
             </div>
-            <mdui-button-icon class="mode-button" @click="toggleTheme"
-                selected-icon="dark_mode" :selected="darkmodeSelected" ref="modeButtonRef">
+            <mdui-button-icon class="mode-button" @click="toggleTheme" selected-icon="dark_mode"
+                :selected="darkmodeSelected" ref="modeButtonRef">
                 <mdui-icon-light-mode--outlined></mdui-icon-light-mode--outlined>
                 <mdui-icon-dark-mode slot="selected-icon" name="dark_mode"></mdui-icon-dark-mode>
             </mdui-button-icon>
