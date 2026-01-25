@@ -329,13 +329,15 @@ onMounted(() => {
         layoutRef.value.addEventListener('scroll', onScroll)
 
     }
-    if (themeConfig.themeConfig.viewsCounter) {
-        console.log(router.route.path)
-        fetch(themeConfig.themeConfig.viewsCounter + `?path=${router.route.path}`).then((res) => {
-            res.json().then((data) => {
-                pageViews.value = data.counts
+    if (page.value) {
+        if (themeConfig.themeConfig.viewsCounter && !page.value.isNotFound) {
+            console.log(router.route.path)
+            fetch(themeConfig.themeConfig.viewsCounter + `?path=${router.route.path}`).then((res) => {
+                res.json().then((data) => {
+                    pageViews.value = data.counts
+                })
             })
-        })
+        }
     }
     let docSearchConfig = defineConfig.themeConfig.docSearch
     if (docSearchConfig && docSearchConfig.apiKey && docSearchConfig.appId && docSearchConfig.indexName) {
