@@ -1,3 +1,9 @@
+## Under construction
+
+This repo's codebase will be updated once [this issue](https://github.com/zdhxiong/mdui/issues/382) is resolved, which cause jittering in theme animations. The layout will be refactored and, add some new features such as TOC will be added.
+
+## Description
+
 A Material You stylized theme for vitepress, built with Vue3 + MDUI + GSAP and etc.
 
 
