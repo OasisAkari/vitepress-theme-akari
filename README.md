@@ -1,6 +1,6 @@
 ## Under construction
 
-This repo's codebase will be updated once [this issue](https://github.com/zdhxiong/mdui/issues/382) resolved, which cause jittering in theme animations. The layout will be refactored, then some new features such as TOC will be added.
+This repo's codebase will be updated once [this issue](https://github.com/zdhxiong/mdui/issues/382) resolved, which cause jittering in theme animations. The layout will be refactored, then some new features such as TOC will be added. I'm considering maintaince a mdui fork to fix that if mdui's maintainer didn't respond my pull request until I feel the new thing is ready for publish.
 
 ## Description
 
