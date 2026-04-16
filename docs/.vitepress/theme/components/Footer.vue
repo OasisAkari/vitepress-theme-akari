@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import defineConfig from '../../config'
-import { translations } from '../translations';
+import defineConfig from '@vitepress-theme-akari/config';
+import { translations } from '@vitepress-theme-akari/theme/translations';
+import { useThemeGlobalStore } from '@vitepress-theme-akari/theme/global';
+import { storeToRefs } from 'pinia';
 
-
-const footer = ref<HTMLElement | undefined>();
-const introCardRef = ref<HTMLElement | undefined>();
+const store = useThemeGlobalStore();
+const { browserEngine } = storeToRefs(store);
 
 const otherInfo = ref<HTMLElement | null>()
 const compliedTime = ref(new Date().toLocaleString())
@@ -17,31 +18,27 @@ onMounted(() => {
     const themeInfo = document.createElement('a')
     themeInfo.href = "https://github.com/OasisAkari/vitepress-theme-akari"
     themeInfo.innerText = 'Theme: Akari by OasisAkari'
+    // Prefer the complied time from meta tag when available.
     let c = document.querySelector('meta[name="complied-time"]')
     if (c) {
         compliedTime.value = c.getAttribute('content') as string
     }
 
+    // Attach theme attribution and optional debug info.
     if (otherInfo.value) {
         if (defineConfig.themeConfig.footer.beian && defineConfig.themeConfig.footer.beian.use) {
             otherInfo.value.appendChild(themeInfo)
         }
         if (defineConfig.themeConfig.debugInfo) {
-            import('ua-parser-js').then((module) => {
-                let ua = new module.default();
-                let browserName = ua.getBrowser().name;
-                if (browserName && otherInfo.value) {
-                    if (defineConfig.themeConfig.footer.beian && defineConfig.themeConfig.footer.beian.use) {
-                        otherInfo.value.appendChild(document.createTextNode(' · '))
-                    }
-                    otherInfo.value.appendChild(document.createTextNode('Browser: ' + browserName))
-                    otherInfo.value.appendChild(document.createTextNode(' · Complied time: ' + new Date(compliedTime.value).toLocaleString()))
-                }
-            })
-
+            // Lazy-load UA parser only when debug info is enabled.
+            if (defineConfig.themeConfig.footer.beian && defineConfig.themeConfig.footer.beian.use) {
+                otherInfo.value.appendChild(document.createTextNode(' · '))
+            }
+            otherInfo.value.appendChild(document.createTextNode('BrowserEngine: ' + browserEngine.value))
+            otherInfo.value.appendChild(document.createTextNode(' · Complied time: ' + new Date(compliedTime.value).toLocaleString()))
         }
-
     }
+
     themeInfoRef.value?.appendChild(themeInfo)
 });
 
@@ -100,11 +97,11 @@ onMounted(() => {
                     <div class="gongan-beian" v-if="defineConfig.themeConfig.footer.beian.gongan">
                         <img class="beian-icon" :src="defineConfig.themeConfig.footer.beian.gongan.icon" />
                         <a target="_blank" :href="defineConfig.themeConfig.footer.beian.gongan.link">{{
-                        defineConfig.themeConfig.footer.beian.gongan.text }}</a>
+                            defineConfig.themeConfig.footer.beian.gongan.text }}</a>
                     </div>
                     <div class="icp-beian" v-if="defineConfig.themeConfig.footer.beian.icp">
                         <a target="_blank" :href="defineConfig.themeConfig.footer.beian.icp.link">{{
-                        defineConfig.themeConfig.footer.beian.icp.text }}</a>
+                            defineConfig.themeConfig.footer.beian.icp.text }}</a>
                     </div>
                 </div>
                 <div class="theme-information" v-else ref="themeInfoRef">

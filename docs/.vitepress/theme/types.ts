@@ -1,3 +1,4 @@
+// Post metadata used by the theme and content loader.
 interface Post {
     title: string
     layout: string,
@@ -14,8 +15,10 @@ interface Post {
     description: string | undefined
   }
 
+// Theme configuration shape for Akari.
 interface AkariThemeConfig {
   debugInfo: boolean,
+  homePostsPerPage?: number,
   nav: {
     text: string,
     link: string
@@ -68,6 +71,7 @@ interface AkariThemeConfig {
     }
   },
   use_blur_background: boolean,
+  bounceAnimation: boolean,
 
 }
 

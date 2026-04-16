@@ -1,115 +1,98 @@
 <script setup lang="ts">
-import { watch, defineEmits, ref, onMounted, nextTick } from 'vue';
+import { watch, ref } from 'vue';
 import { gsap } from 'gsap';
-import { useThemeGlobalStore } from '../global';
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
+import { useThemeGlobalStore } from '@vitepress-theme-akari/theme/global';
 import { storeToRefs } from 'pinia'
-import { translations } from '../translations';
+import { translations } from '@vitepress-theme-akari/theme/translations';
 import '@mdui/icons/keyboard-arrow-up.js';
+import defineConfig from '@vitepress-theme-akari/config';
 
+gsap.registerPlugin(ScrollToPlugin)
 
 const store = useThemeGlobalStore();
 
-const { showScrollTopButton, startTransition, disableSiteNotice } = storeToRefs(store);
+// Shared flags for layout transitions.
+const { showScrollTopButton } = storeToRefs(store);
 
 const clickToTopButtonRef = ref<HTMLElement | null>(null);
 
+const scrollActive = ref(false);
+
+// Animate button visibility when scrolling state changes.
 watch(showScrollTopButton, (show: boolean) => {
     if (clickToTopButtonRef.value) {
+        gsap.killTweensOf(clickToTopButtonRef.value);
+        gsap.set(clickToTopButtonRef.value, { visibility: 'visible' });
         if (show) {
             gsap.to(clickToTopButtonRef.value, {
-                opacity: 1,
-                duration: 0.1,
+                duration: defineConfig.themeConfig.bounceAnimation ? 0.8 : 0.6,
                 scale: 1,
+                ease: defineConfig.themeConfig.bounceAnimation ? 'elastic.out(1, 1)' : 'expo.out',
+                pointerEvents: 'auto',
+                overwrite: true,
             });
         } else {
             gsap.to(clickToTopButtonRef.value, {
-                opacity: 0,
                 duration: 0.1,
                 scale: 0,
+                ease: 'power2.in',
+                overwrite: 'auto',
+                onComplete: () => {
+                    if (clickToTopButtonRef.value) {
+                        gsap.set(clickToTopButtonRef.value, { visibility: 'hidden', pointerEvents: 'none' });
+                    }
+                },
             });
         }
     }
 });
 
+const topTween = ref<gsap.core.Tween>();
 
-const positionBottom = ref('100px');
-
-watch(positionBottom, (bottom: string) => {
-    if (clickToTopButtonRef.value && clickToTopButtonRef.value.style.bottom !== bottom) {
-        gsap.to(clickToTopButtonRef.value, {
-            bottom: bottom,
-            duration: 0.3,
-            ease: 'expo.out',
-        });
+watch(scrollActive, (active) => {
+    if (!clickToTopButtonRef.value) {
+        return;
     }
-});
 
+    if (active) {
+        let calcDuration = Math.max(1, window.scrollY / 2000); // Duration based on scroll distance, with a minimum of 0.5s.
 
-function changePosition() {
-    if (disableSiteNotice.value) {
-        positionBottom.value = window.innerWidth > 768 ? '50px' : '70px';
+        topTween.value = gsap.to(window, {
+            scrollTo: { y: 0, autoKill: true },
+            duration: calcDuration,
+            ease: 'power2.out',
+            onComplete: () => {
+                scrollActive.value = false;
+            },
+            onInterrupt: () => {
+                scrollActive.value = false;
+            },
+        })
     } else {
-        positionBottom.value = window.innerWidth > 768 ? '100px' : '130px';
-    }
-}
-
-watch(disableSiteNotice, (disable: boolean) => {
-    if (disable) {
-        changePosition();
+        if (topTween.value && topTween.value.isActive()) {
+            topTween.value.kill();
+        }
     }
 });
-
-onMounted(() => {
-    window.addEventListener('resize', changePosition);
-    nextTick(() => {
-        changePosition();
-    });
-});
-
-
-const emit = defineEmits(['scroll-to-top']);
-
-function s() {
-    emit('scroll-to-top');
-}
-
 
 
 </script>
 
 <template>
-    <mdui-tooltip :content=translations.components.clickToTop>
-        <div class="click-to-top" @click="s" :class="{ 'start-transition': startTransition }" ref="clickToTopButtonRef">
-
-            <mdui-fab icon="up" variant="secondary">
-                <mdui-icon-keyboard-arrow-up slot="icon" name="up"></mdui-icon-keyboard-arrow-up>
-            </mdui-fab>
-
-        </div>
-    </mdui-tooltip>
+    <div class="click-to-top" @click="scrollActive = !scrollActive" ref="clickToTopButtonRef">
+        <mdui-fab icon="up" variant="secondary" :extended="scrollActive">
+            {{ translations.components.clickToTop }}
+            <mdui-icon-keyboard-arrow-up slot="icon" name="up"></mdui-icon-keyboard-arrow-up>
+        </mdui-fab>
+    </div>
 </template>
 
 
 <style>
 .click-to-top {
-    position: fixed;
-    bottom: 100px;
-    right: 50px;
-    z-index: 100;
-    opacity: 0;
     scale: 0;
-}
-
-.click-to-top.start-transition {
-    view-transition-name: click-to-top;
-}
-
-@media screen and (max-width: 768px) {
-
-    .click-to-top {
-        right: 5px;
-        bottom: 130px;
-    }
-
+    cursor: pointer;
+    pointer-events: none;
 }
 </style>

@@ -1,7 +1,48 @@
 <script setup lang="ts">
-import { translations } from '../translations';
+import { onMounted, ref } from 'vue';
+import { useRouter, withBase } from 'vitepress';
+import { data } from '@vitepress-theme-akari/theme/posts.data';
+import { translations } from '@vitepress-theme-akari/theme/translations';
 
+
+const router = useRouter();
+
+// Random faces to soften the 404 page.
 const faces = ["\\(^\u0414^)/", "(\u0387.\u0387)", "(\u02da\u0394\u02da)b", "(\u0387_\u0387)", "(^_^)b", "(>_<)", "(o^^)o", "(;-;)", "(\u2265o\u2264)", "\\(o_o)/", "(^-^*)", "(='X'=)"]
+
+let showFace = ref()
+
+// Attempt soft-redirects for legacy routes or missing .html suffix.
+onMounted(() => {
+    showFace.value = faces[Math.floor(Math.random() * faces.length)]
+    let url = router.route.path
+    if (url.endsWith('.html')) {
+        url = url.replace('.html', '')
+    }
+    if (url.startsWith('/index.php')) {
+        url = url.replace('/index.php', '')
+    }
+    console.log(url)
+    if ((url === '/' || url === '') && localStorage.getItem('lastRedirect') !== url) {
+        localStorage.setItem('lastRedirect', url)
+        location.href = withBase(url)
+        return
+    }
+    for (let post in data) {
+        if (data[post].url.startsWith(url) && data[post].url !== url) {
+            let a_url = data[post].url
+            if (!a_url.endsWith('.html')) {
+                a_url = a_url + '.html'
+            }
+            if (a_url !== url && localStorage.getItem('lastRedirect') !== url) {
+                localStorage.setItem('lastRedirect', url)
+                location.href = withBase(a_url)
+            }
+            break
+        }
+    }
+
+});
 
 
 
@@ -11,7 +52,7 @@ const faces = ["\\(^\u0414^)/", "(\u0387.\u0387)", "(\u02da\u0394\u02da)b", "(\u
     <div class="page-not-found-container">
         <div class="page-not-found mdui-prose">
             <div class="page-not-found-avatar">
-                {{ faces[Math.floor(Math.random() * faces.length)] }}
+                {{ showFace }}
             </div>
             <div class="page-not-found-content">
                 <div class="page-not-found-content-heading">404</div>
@@ -32,11 +73,12 @@ const faces = ["\\(^\u0414^)/", "(\u0387.\u0387)", "(\u02da\u0394\u02da)b", "(\u
 
 .page-not-found {
     background-color: rgb(var(--mdui-color-surface-container));
-    width: 85%;
+    width: 100%;
     margin-bottom: 100px;
     border-radius: var(--mdui-shape-corner-extra-large);
     box-shadow: var(--mdui-elevation-level4);
     display: flex;
+    flex-grow: 1;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;

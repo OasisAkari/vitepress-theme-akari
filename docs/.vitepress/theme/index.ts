@@ -1,12 +1,13 @@
 // https://vitepress.dev/guide/custom-theme
-import 'mdui/mdui.css';
+import '@oasisakari/mdui/mdui.css';
 import './style.css'
-import 'mdui'
+
+import '@oasisakari/mdui'
 import Layout from './Layout.vue'
 import matomo from "@datagouv/vitepress-plugin-matomo";
 import googleAnalytics from 'vitepress-plugin-google-analytics'
 import { createPinia } from 'pinia'
-import defineConfig from '../config';
+import defineConfig from '@vitepress-theme-akari/config';
 
 // import vitepress default style
 import 'vitepress/dist/client/theme-default/styles/icons.css';
@@ -19,9 +20,11 @@ import './vitepress-default-style.css'
 
 
 
+// VitePress theme entry with optional analytics and global stores.
 export default {
   Layout,
-  enhanceApp(ctx: any) {
+  async enhanceApp(ctx: any) {
+    // Register trackers only when configured.
     if (defineConfig.themeConfig.trackers) {
       if (defineConfig.themeConfig.trackers.matomo.use) {
         matomo({
@@ -36,6 +39,12 @@ export default {
         })
       }
     }
-    ctx.app.use(createPinia())
+    // Provide Pinia to all components.
+    const pinia = createPinia()
+    if (!import.meta.env.SSR) {
+      const persistModule = await import('pinia-plugin-persistedstate')
+      pinia.use(persistModule.default)
+    }
+    ctx.app.use(pinia)
   }
 }

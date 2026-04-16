@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    // "baseUrl": ".",
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "Bundler",
@@ -9,7 +9,7 @@
     "strict": true,
     "types": ["vite/client", "vitepress/client"],
     "paths": {
-      "@theme/*": ["./theme/*"],
+      "@vitepress-theme-akari/*": ["./*"],
       "@/*": ["../*"]
     },
     "lib": ["ESNext", "DOM"],

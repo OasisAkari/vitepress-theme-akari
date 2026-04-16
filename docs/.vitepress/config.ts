@@ -12,7 +12,7 @@ const themeConfig: AkariThemeConfig = {
     { text: 'Code Block', link: '/code-block.html' },
   ],
   hideFromHomeLayouts: ['home'],
-  defaultColorsSet: ['#ac2b21', '#8e2fa8', '#285f9f', '#2e6c29', '#675f1a', '#2b6672'],
+  defaultColorsSet: ['random'],
   baseThemeColor: '#ffffff',
   siteNotice: [
     'Test Message',
@@ -47,13 +47,15 @@ const themeConfig: AkariThemeConfig = {
       { text: 'Example', link: 'https://example.com' },
       { text: 'Example', link: 'https://example.com' },
     ],
-    copyRight: '©2024 <Your name>',
+    copyRight: '©2026 <Your name>',
   },
   use_blur_background: false,
+  bounceAnimation: false, // If you want to use bounce animation, set this to true. This will make the theme more "expressive".
 }
 
+
 const defineConfig = { // Docs: https://vitepress.dev/reference/site-config
-  
+
   lang: 'en-US', // Language, set to 'zh-CN' if you want to use Chinese
   title: "Test Site",
   subtitle: "A test site for Akari Theme",
@@ -70,17 +72,22 @@ const defineConfig = { // Docs: https://vitepress.dev/reference/site-config
     },
   },
   vite: {
-    resolve: { // If you don't like something, just replace it :)
-      // alias: [
-      //   {
-      //     find: /^.*\/NotFound\.vue$/,
-      //     replacement: './custom/NotFound.vue'
-      //   },
-      //   {
-      //     find: /^.*\/Footer\.vue$/,
-      //     replacement: './custom/Footer.vue'
-      //   }
-      // ]
+    resolve: {
+      alias: [
+        {
+          find: '@vitepress-theme-akari',
+          replacement: '/.vitepress'
+        },
+        // If you don't like something, just replace it :)
+        // {
+        //   find: /^.*\/NotFound\.vue$/,
+        //   replacement: './custom/NotFound.vue'
+        // },
+        // {
+        //   find: /^.*\/Footer\.vue$/,
+        //   replacement: './custom/Footer.vue'
+        // }
+      ]
     }
   },
 

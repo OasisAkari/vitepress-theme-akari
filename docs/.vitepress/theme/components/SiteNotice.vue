@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { onMounted, ref, nextTick } from 'vue';
+import { onMounted, ref, nextTick, onUnmounted } from 'vue';
 import { gsap } from 'gsap';
-import { useThemeGlobalStore } from '../global';
+import { useThemeGlobalPersistStore } from '@vitepress-theme-akari/theme/global_persist';
 import { storeToRefs } from 'pinia'
-import defineConfig from '../../config';
-import { translations } from '../translations';
+import defineConfig from '@vitepress-theme-akari/config';
+import { translations } from '@vitepress-theme-akari/theme/translations';
+import { snackbar } from "@oasisakari/mdui/functions/snackbar.js";
 
 import '@mdui/icons/close.js';
 
 
-const store = useThemeGlobalStore();
+const persistStore = useThemeGlobalPersistStore()
 
-const { startTransition, disableSiteNotice } = storeToRefs(store);
-
+const { noSiteNotice } = storeToRefs(persistStore)
 
 let selected_notice = 0
 
@@ -20,28 +20,23 @@ const textRef = ref()
 const backgroundRef = ref()
 const textContainerRef = ref()
 
+function onResize() {
+    backgroundRef.value.style.width = textContainerRef.value.offsetWidth + 50 + 'px'
+    backgroundRef.value.style.height = textContainerRef.value.offsetHeight + 'px'
+}
+
+const noticeInterval = ref()
+
 
 onMounted(() => {
+    // Load notice list and honor the "closed" cooldown window.
     let noticeList = defineConfig.themeConfig.siteNotice
 
     if (noticeList && noticeList.length === 0) {
-        disableSiteNotice.value = true
+        noSiteNotice.value = true
         return
     }
-    if (noticeList) {
-        if (localStorage.getItem('site_notice') == 'false') {
-            let close_time = localStorage.getItem('site_notice_time')
-            if (close_time) {
-                if (new Date().getTime() - parseInt(close_time) > 259200000) {
-                    localStorage.setItem('site_notice', 'true')
-                } else {
-                    disableSiteNotice.value = true
-                    return
-                }
-            } else {
-                localStorage.setItem('site_notice', 'true')
-            }
-        }
+    if (noticeList && persistStore.siteNoticeVisible) {
         console.log('SiteNotice mounted')
 
         textContainerRef.value.style.display = 'flex'
@@ -57,15 +52,11 @@ onMounted(() => {
             backgroundRef.value.style.height = textContainerRef.value.offsetHeight + 'px'
         })
 
-        function onResize() {
-            backgroundRef.value.style.width = textContainerRef.value.offsetWidth + 50 + 'px'
-            backgroundRef.value.style.height = textContainerRef.value.offsetHeight + 'px'
-        }
-
         window.addEventListener('resize', onResize, false)
 
-
-        setInterval(() => {
+        
+        // Rotate notices on a timer.
+        noticeInterval.value = setInterval(() => {
             selected_notice += 1
             if (selected_notice >= noticeList.length) {
                 selected_notice = 0
@@ -78,14 +69,14 @@ onMounted(() => {
                     textRef.value.innerHTML = noticeList[selected_notice]
                     gsap.to(textRef.value, {
                         opacity: 1,
-                        duration: 0.3,
+                        duration: defineConfig.themeConfig.bounceAnimation ? 0.8 : 0.3,
                         ease: 'expo.out',
                     })
                     gsap.to(backgroundRef.value, {
                         width: textContainerRef.value.offsetWidth + 50,
                         height: textContainerRef.value.offsetHeight,
-                        duration: 0.3,
-                        ease: 'expo.out',
+                        duration: defineConfig.themeConfig.bounceAnimation ? 0.8 : 0.3,
+                        ease: defineConfig.themeConfig.bounceAnimation ? 'elastic.out(1, 1)' : 'expo.out',
                     })
                 }
             })
@@ -94,6 +85,7 @@ onMounted(() => {
     }
 })
 
+// Close the notice and store cooldown timestamp.
 function close_notice() {
     gsap.to(textContainerRef.value, {
         opacity: 0,
@@ -109,28 +101,27 @@ function close_notice() {
         ease: 'expo.out',
     })
 
-    localStorage.setItem('site_notice', 'false')
-    localStorage.setItem('site_notice_time', new Date().getTime().toString())
-    let snackbar = document.querySelector('.site-notice-snackbar-closed')
-    if (snackbar) {
-        snackbar.setAttribute('open', 'true')
-    }
+    snackbar({message: translations.components.noticeClosedFor3Days})
     textContainerRef.value.style.display = 'none'
     backgroundRef.value.style.display = 'none'
-    disableSiteNotice.value = true
+    persistStore.disableSiteNoticeFor3Days()
 
 }
+
+onUnmounted(() => {
+    window.removeEventListener('resize', onResize)
+    clearInterval(noticeInterval.value)
+})
 
 </script>
 
 <template>
-    <mdui-snackbar class="site-notice-snackbar-closed">{{ translations.components.noticeClosedFor3Days
-        }}</mdui-snackbar>
-    <div class="site-notice-container" v-if="defineConfig.themeConfig.siteNotice && defineConfig.themeConfig.siteNotice.length > 0">
-        <div class="site-notice-text-container" ref="textContainerRef" :class="{ 'start-transition': startTransition }">
+    <div class="site-notice-container"
+        v-if="defineConfig.themeConfig.siteNotice && defineConfig.themeConfig.siteNotice.length > 0 && persistStore.siteNoticeVisible">
+        <div class="site-notice-text-container" ref="textContainerRef">
             <div class="site-notice-text" ref="textRef"></div>
         </div>
-        <div class="site-notice-background" ref="backgroundRef" :class="{ 'start-transition': startTransition }">
+        <div class="site-notice-background" ref="backgroundRef">
             <mdui-button-icon class="close-sitenotice" icon="mdui-icon-close" @click="close_notice">
                 <mdui-icon-close></mdui-icon-close>
             </mdui-button-icon>
@@ -163,18 +154,11 @@ function close_notice() {
 
 
 .site-notice-background {
-
     background-color: rgb(var(--mdui-color-secondary-container));
     color: rgb(var(--mdui-color-on-secondary-container));
     border-radius: var(--mdui-shape-corner-medium);
-
     transition: width var(--mdui-motion-easing-standard) var(--mdui-motion-duration-short1);
-
     box-shadow: var(--mdui-elevation-level3);
-}
-
-.site-notice-background.start-transition {
-    view-transition-name: site-notice-background;
 }
 
 .close-sitenotice {
@@ -192,11 +176,7 @@ function close_notice() {
     padding-bottom: 15px;
 }
 
-.site-notice-text-container.start-transition {
-    view-transition-name: site-notice-text-container;
-}
-
-.site-notice-text a{
+.site-notice-text a {
     text-decoration: none;
 }
 </style>

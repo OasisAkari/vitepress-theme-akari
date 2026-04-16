@@ -1,34 +1,42 @@
 {
   "type": "module",
   "devDependencies": {
-    "@floating-ui/vue": "^1.1.2",
-    "@rollup/plugin-commonjs": "^28.0.0",
-    "@types/node": "^22.0.0",
+    "@floating-ui/vue": "^1.0.6",
+    "@rollup/plugin-commonjs": "^29.0.0",
+    "@types/node": "^24.0.0",
     "@types/ua-parser-js": "^0.7.39",
     "clipboard": "^2.0.11",
-    "terser": "^5.31.3"
+    "terser": "^5.27.0",
+    "vitepress": "^2.0.0-alpha.17"
   },
   "scripts": {
-    "docs:dev": "vitepress dev docs --host",
+    "docs:dev": "vitepress dev docs --port 6173 --host",
     "docs:build": "vitepress build docs",
     "predocs:build": "node ./tools/content-fixer.mjs",
-    "docs:preview": "vitepress preview docs --host"
+    "docs:preview": "vitepress preview docs --port 7173 --host"
   },
   "dependencies": {
     "@datagouv/vitepress-plugin-matomo": "^1.0.5",
-    "@docsearch/js": "^3.6.1",
+    "@docsearch/css": "^4.6.0",
+    "@docsearch/js": "^4.6.0",
     "@material/material-color-utilities": "^0.3.0",
-    "@mdui/icons": "^1.0.2",
-    "@napi-rs/canvas": "^0.1.53",
+    "@mdui/icons": "^1.0.3",
+    "@napi-rs/canvas": "^0.1.44",
+    "@oasisakari/mdui": "^2.1.4",
     "gray-matter": "^4.0.3",
     "gsap": "^3.12.5",
-    "mdui": "^2.1.2",
+    "markdown-it-image-size": "^15.0.0",
     "pinia": "^3.0.0",
-    "typescript": "^5.5.4",
-    "ua-parser-js": "^2.0.0",
-    "vitepress": "^1.3.1",
+    "pinia-plugin-persistedstate": "^4.7.1",
+    "punycode-detector": "^1.0.4",
+    "typescript": "^6.0.0",
+    "ua-parser-js": "^2.0.9",
+    "view-transitions-polyfill": "^1.0.6",
     "vitepress-plugin-google-analytics": "^1.0.2",
     "vue": "^3.4.14",
     "vue3-lazyload": "^0.3.8"
+  },
+  "engines": {
+    "node": ">=24"
   }
 }

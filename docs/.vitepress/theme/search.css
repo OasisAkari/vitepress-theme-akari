@@ -6,6 +6,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    border-radius: var(--mdui-shape-corner-full);
+    padding: 0px;
+    border: none;
 }
 
 .DocSearch-Button:active,
@@ -19,8 +22,21 @@
     display: none
 }
 
-.DocSearch-Button .DocSearch-Search-Icon {
+.DocSearch-LoadingIndicator svg,
+.DocSearch-MagnifierLabel svg,
+.DocSearch-Button-Container svg {
     color: rgb(var(--mdui-color-on-surface-variant));
+    stroke: rgb(var(--mdui-color-on-surface-variant));
+}
+
+.DocSearch-MagnifierLabel svg * {
+    color: rgb(var(--mdui-color-on-surface-variant));
+}
+
+.DocSearch-Action,
+.DocSearch-AskAi-Return {
+    color: rgb(var(--mdui-color-on-surface-variant));
+    stroke: rgb(var(--mdui-color-on-surface-variant));
 }
 
 .DocSearch--active .DocSearch-Container {
@@ -38,6 +54,12 @@
     box-shadow: var(--mdui-elevation-level5);
     border-radius: var(--mdui-shape-corner-medium);
     margin: 72px auto auto;
+    max-width: 560px;
+    max-height: 540px;
+}
+
+.DocSearch-Hit-source{
+    position: unset;
 }
 
 .DocSearch-SearchBar {
@@ -47,6 +69,7 @@
 .DocSearch-Dropdown {
     padding: 10px;
     padding-top: 0px;
+    scrollbar-color: rgb(var(--mdui-color-on-surface-variant)) rgba(var(--mdui-color-surface-container-highest), 0);
 }
 
 .DocSearch-Commands {
@@ -57,6 +80,7 @@
     background: none;
     box-shadow: none;
     height: unset;
+    border-block-start: none;
 }
 
 .DocSearch-Help,
@@ -74,6 +98,7 @@
     border-radius: var(--mdui-shape-corner-extra-large);
     background-color: rgb(var(--mdui-color-surface-variant));
     box-shadow: var(--mdui-elevation-level1);
+    border-block-end: none;
 }
 
 .DocSearch-Logo {
@@ -88,8 +113,30 @@
     fill: rgb(var(--mdui-color-on-surface-variant));
 }
 
-.DocSearch-Input {
+.DocSearch-Input,
+.DocSearch-Clear {
     color: rgb(var(--mdui-color-on-surface-variant));
+}
+
+.DocSearch-Close {
+    transition: color var(--mdui-motion-duration-short2) var(--mdui-motion-easing-linear);
+}
+
+.DocSearch-Close:hover,
+.DocSearch-Action:hover,
+.DocSearch-AskAi-Return:hover {
+    color: rgb(var(--mdui-color-on-primary-container));
+    background-color: unset;
+}
+
+.DocSearch-Divider {
+    border-inline-start: 1px solid rgb(var(--mdui-color-on-surface-variant));
+}
+
+.DocSearch-Input::placeholder {
+    color: rgb(var(--mdui-color-on-surface-variant));
+    opacity: 0.6;
+    background-color: unset;
 }
 
 .DocSearch-Reset {
@@ -211,3 +258,8 @@ ul#docsearch-list {
 .DocSearch-Button-Placeholder {
     display: none;
 }
+
+.DocSearch--active {
+    overflow: unset !important;
+}
+

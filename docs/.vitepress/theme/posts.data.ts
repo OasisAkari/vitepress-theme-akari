@@ -1,10 +1,11 @@
 import { createContentLoader } from 'vitepress'
-import { Post } from './types.js'
+import { Post } from './types'
 
 
 declare const data: Post[]
 export { data }
 
+// Build post metadata from markdown files.
 export default createContentLoader('*.md', {
   transform(raw): Post[] {
     return raw
@@ -25,6 +26,7 @@ export default createContentLoader('*.md', {
   }
 })
 
+// Normalize frontmatter date to a sortable timestamp and ISO date string.
 function formatDate(raw: string): Post['date'] {
   if (!raw) return { time: 0, string: '' }
   const date = new Date(raw)
