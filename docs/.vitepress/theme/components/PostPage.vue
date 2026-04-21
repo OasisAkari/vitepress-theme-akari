@@ -110,8 +110,20 @@ const lastUpdatedText = computed(() => {
     if (!lastUpdated || Number.isNaN(lastUpdated.getTime())) {
         return ''
     }
-    // Use a deterministic format to avoid locale/timezone hydration mismatches.
-    return `${translations.components.lastUpdated}${lastUpdated.toISOString().replace('T', ' ').slice(0, 19)}`
+    // Shift UTC time by local timezone offset, and append the offset label.
+    const timezoneOffsetMinutes = -lastUpdated.getTimezoneOffset()
+    const shiftedDate = new Date(lastUpdated.getTime() + timezoneOffsetMinutes * 60 * 1000)
+    const shiftedText = shiftedDate.toISOString().replace('T', ' ').slice(0, 19)
+
+    const sign = timezoneOffsetMinutes >= 0 ? '+' : '-'
+    const absOffsetMinutes = Math.abs(timezoneOffsetMinutes)
+    const offsetHours = Math.floor(absOffsetMinutes / 60)
+    const offsetMinutes = absOffsetMinutes % 60
+    const utcOffset = offsetMinutes === 0
+        ? `UTC${sign}${offsetHours}`
+        : `UTC${sign}${String(offsetHours).padStart(2, '0')}:${String(offsetMinutes).padStart(2, '0')}`
+
+    return `${translations.components.lastUpdated}${shiftedText}（${utcOffset}）`
 })
 
 const ensureClientRandomColor = () => {
@@ -655,31 +667,32 @@ const playPostTransition = (opened: boolean) => {
         }, 0)
     }
     if (opened && postContentsRef.value) {
-        postOpenTransitionTimeline.fromTo(postContentsRef.value, {
-            opacity: 0,
-            // y: 300,
-            scale: 0.98
-        }, {
-            opacity: 1,
-            duration: 1,
-            ease: 'expo.out',
-            y: 0,
-            scale: 1,
-            onComplete: () => {
-                if (postContentsRef.value) {
-                    postContentsRef.value.style.transform = 'none'
-                }
-            }
-        }, 0)
+        // postOpenTransitionTimeline.fromTo(postContentsRef.value, {
+        //     // opacity: 0,
+        //     // y: 300,
+        //     // scale: 0.98
+        // }, {
+        //     opacity: 1,
+        //     duration: 1,
+        //     ease: 'expo.out',
+        //     // y: 0,
+        //     // scale: 1,
+        //     onComplete: () => {
+
+        //     }
+        // }, 0)
+        if (postContentsRef.value) {
+            postContentsRef.value.style.transform = 'none'
+        }
     } else if (postContentsRef.value) {
-        postOpenTransitionTimeline.set(
-            postContentsRef.value, {
-            opacity: 0,
-            // y: 300,
-            scale: 0.98,
-        },
-            0
-        )
+        // postOpenTransitionTimeline.set(
+        //     postContentsRef.value, {
+        //     opacity: 0,
+        //     // y: 300,
+        //     // scale: 0.98,
+        // },
+        //     0
+        // )
     }
 
     syncImagePosition(opened, opened, postOpenTransitionTimeline)
@@ -748,20 +761,24 @@ const applyPostTransitionInstantly = (opened: boolean) => {
         })
     }
 
+    // if (postContentsRef.value) {
+    //     gsap.set(postContentsRef.value, opened
+    //         ? {
+    //             opacity: 1,
+    //             //  y: 0, 
+    //             //  scale: 1,
+    //             onComplete: () => {
+
+    //             }
+    //         }
+    //         : {
+    //             opacity: 0,
+    //             // y: 300,
+    //             // scale: 0.98,
+    //         })
+    // }
     if (postContentsRef.value) {
-        gsap.set(postContentsRef.value, opened
-            ? {
-                opacity: 1, y: 0, scale: 1, onComplete: () => {
-                    if (postContentsRef.value) {
-                        postContentsRef.value.style.transform = 'none'
-                    }
-                }
-            }
-            : {
-                opacity: 0,
-                // y: 300,
-                scale: 0.98,
-            })
+        postContentsRef.value.style.transform = 'none'
     }
 
     dateText.value = opened
@@ -1309,6 +1326,7 @@ const transitionStyle = computed(() => {
     padding-top: 10px;
     padding-bottom: 10px;
     --post-card-radius: 1.75rem;
+    will-change: transition;
 }
 
 .post-page-wrapper:has(.is-card):active {
@@ -1323,6 +1341,7 @@ const transitionStyle = computed(() => {
     position: relative;
     overflow: hidden;
     transition: border-radius var(--mdui-motion-easing-standard) var(--mdui-motion-duration-short4);
+    will-change: height;
 }
 
 
@@ -1401,7 +1420,7 @@ const transitionStyle = computed(() => {
 }
 
 .post-post-contents {
-    opacity: 0;
+    /* opacity: 0; */
     margin-bottom: 20px;
 }
 
