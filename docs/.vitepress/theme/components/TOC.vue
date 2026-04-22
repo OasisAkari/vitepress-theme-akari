@@ -102,7 +102,7 @@ function animateTocOverlap(overlapping: boolean, offset: number, isPastBottom: b
         return;
     }
     lastTocOffset = snappedOffset;
-    tocRef.value.style.transform = `translate3d(0, ${snappedOffset}px, 0)`;
+    gsap.set(tocRef.value, { y: snappedOffset, overwrite: 'auto' });
 }
 
 // Normalize VitePress headers into a flat TOC list.
@@ -131,7 +131,7 @@ function normalizeHeaders(headers: any[]): TocItem[] {
 
 // Update active TOC item based on scroll position (scroll spy).
 function updateActiveByScroll() {
-    
+
     if (import.meta.env.SSR) {
         return;
     }
@@ -418,7 +418,7 @@ onMounted(() => {
     onScroll = () => {
         scrolledEnoughForToc.value = window.scrollY > 10
         // console.log(isPostPage.value, scrolledEnoughForToc.value, canShowToc.value, manualHideToc.value, canShowToc.value)
-        if (showToc.value || props.mobileOpened){
+        if (showToc.value || props.mobileOpened) {
             updateActiveByScroll();
         }
         if (!props.isMobile) {
@@ -482,14 +482,13 @@ defineExpose({
 </script>
 
 <template>
-    <div class="toc-container" :class="{ 'moblie': props.isMobile }" ref="tocContainerRef" :inert="!isTocInteractive"
+    <div class="toc-container" :class="{ 'mobile': props.isMobile }" ref="tocContainerRef" :inert="!isTocInteractive"
         :aria-hidden="!isTocInteractive">
-        <div class="toc" v-if="tocItems.length" ref="tocRef" :class="{ 'moblie': props.isMobile }">
+        <div class="toc" v-if="tocItems.length" ref="tocRef" :class="{ 'mobile': props.isMobile }">
             <div class="toc-title" v-if="!props.isMobile">{{ translations.components.tocTitle }}</div>
             <mdui-list class="toc-list">
-                <mdui-list-item v-for="(item, index) in tocItems" rounded
-                    :active="item.slug === activeHash" @click="scrollToHeading(item)"
-                    :class="{ 'toc-item-small': item.level > minLevel }"
+                <mdui-list-item v-for="(item, index) in tocItems" rounded :active="item.slug === activeHash"
+                    @click="scrollToHeading(item)" :class="{ 'toc-item-small': item.level > minLevel }"
                     :style="{ marginLeft: `${(item.level - minLevel) * 12}px` }"
                     @mouseenter="() => { setHovered(index) }" @mouseleave="clearHovered">
                     <Marquee :text="item.title"
@@ -534,6 +533,11 @@ defineExpose({
     scrollbar-gutter: stable;
     scrollbar-width: thin;
     scrollbar-color: rgba(var(--mdui-color-on-surface-variant), 0.3) rgba(var(--mdui-color-on-surface-variant), 0);
+    will-change: transform;
+}
+
+.toc.mobile {
+    border-radius: none;
 }
 
 .toc::-webkit-scrollbar {
