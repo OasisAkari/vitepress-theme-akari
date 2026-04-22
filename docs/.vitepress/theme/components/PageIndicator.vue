@@ -124,6 +124,8 @@ watch(
     }
 )
 
+let activing = ref(false)
+
 
 // Animate the pill padding as the input enters or exits edit mode.
 watch(active, (isActive) => {
@@ -132,6 +134,7 @@ watch(active, (isActive) => {
     }
     gsap.killTweensOf(indicatorOuterRef.value)
     if (isActive) {
+        activing.value = true
         gsap.to(indicatorOuterRef.value, {
             padding: '8px 18px',
             duration: defineConfig.themeConfig.bounceAnimation ? 0.8 : 0.4,
@@ -142,6 +145,9 @@ watch(active, (isActive) => {
             padding: '8px 12px',
             duration: 0.2,
             ease: 'power2.out',
+            onComplete: () => {
+                activing.value = false
+            },
         });
     }
 
@@ -160,9 +166,10 @@ onMounted(() => {
 })
 
 // Clicking the pill toggles focus behavior without exposing the raw input chrome.
+
 function focusInput() {
     if (inputRef.value) {
-        if (active.value) {
+        if (activing.value) {
             inputRef.value.blur()
             return
         }
@@ -188,7 +195,7 @@ function focusInput() {
                     <input class="page-indicator-input" type="text" v-model="currentPage" ref="inputRef"
                         inputmode="numeric" autocomplete="off" :maxlength="String(totalPages).length"
                         @focus="handleInputFocus" @blur="handleInputBlur" @input="handleInput"
-                        @keydown.enter="inputRef?.blur()" />
+                        @keydown.enter="inputRef?.blur()" @click.prevent="" />
                     <div class="page-indicator-divider">/</div>
                     <label name="total-page" class="total-page">{{ totalPages }}</label>
                 </div>
