@@ -19,7 +19,7 @@
     "@datagouv/vitepress-plugin-matomo": "^1.0.5",
     "@docsearch/css": "^4.6.0",
     "@docsearch/js": "^4.6.0",
-    "@material/material-color-utilities": "^0.3.0",
+    "@material/material-color-utilities": "^0.4.0",
     "@mdui/icons": "^1.0.3",
     "@napi-rs/canvas": "^0.1.44",
     "@oasisakari/mdui": "^2.1.4",
